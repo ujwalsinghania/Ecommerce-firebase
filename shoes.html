@@ -61,14 +61,14 @@
 					'<div class="product-item">',
 					'<div class="card" style="border: 0;">',
 						'<div class="pi-pic">',
-							'<img src=' + cardData.image+'>',
+							'<img width = "100%" src=' + cardData.image+'>',
 								'<div class="pi-links">',
 									'<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>',
 								'</div>',
 						'</div>',
 					'<div class="pi-text">',
 						'<h6>'+cardData.price +'</h6>',
-						'<p>'+cardData.Name+'</p>',
+							'<a href="product.html">'+cardData.Name+'</a>',
 						'</div>',
 					'</div>',
 				'</div>'
@@ -95,10 +95,13 @@
 								test = url.toString() ;
 								var prod = {
 									id: doc.id,
-									name: doc.data().name,
+									Name: doc.data().name,
 									price: doc.data().price,
 									image: test
 								};
+								$('#products').append(
+										createCard(prod)
+								) ;
 								data.push(prod) ;
 								console.log(data) ;
 							}).catch(function (error) {
