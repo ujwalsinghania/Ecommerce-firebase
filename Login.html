@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
+            authDomain: "loco-f1182.firebaseapp.com",
+            databaseURL: "https://loco-f1182.firebaseio.com",
+            projectId: "loco-f1182",
+            storageBucket: "loco-f1182.appspot.com",
+            messagingSenderId: "907665553764"
+        };
+
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+        var auth = firebase.auth();
+
+    </script>
+
+    <!-- Add additional services that you want to use -->
+
+    <!-- Comment out (or don't include) services that you don't want to use -->
+    <!--- <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script> -->
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+
+    <script>
+
+        var errorMessage ;
+
+        function authenticate() {
+        var email = document.forms["login"]["email"].value;
+        var password = document.forms["login"]["pswd"].value;
+        var role= document.forms["login"]["role"].value;
+
+        localStorage.setItem("role", role);
+
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            errorMessage = error.message;
+            console.log(errorMessage);
+        }).then( function () {
+            if(!errorMessage) {
+                window.location.replace("index.html");
+                }
+            else {
+                alert("error") ;
+                }
+            });
+    }
+
+
+</script>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>Stacked form</h2>
+    <form name="login" method="post">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd">
+        </div>
+        <div class="form-group">
+            <label for="role">Select Role:</label>
+            <select class="form-control" id="role" name="role">
+                <option>Shopkeeper</option>
+                <option>Delivery</option>
+                <option>Customer</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="authenticate()">Submit</button>
+    </form>
+</div>
+<br><br>
+<span><h4>Don't have an account? </h4><a href="SignUp.html">Sign Up</a></span>
+
+</body>
+</html>

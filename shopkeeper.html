@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
+            authDomain: "loco-f1182.firebaseapp.com",
+            databaseURL: "https://loco-f1182.firebaseio.com",
+            projectId: "loco-f1182",
+            storageBucket: "loco-f1182.appspot.com",
+            messagingSenderId: "907665553764"
+        };
+
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+        var auth = firebase.auth() ;
+        var storage = firebase.storage().ref();
+
+    </script>
+
+    <!-- Add additional services that you want to use -->
+
+    <!-- Comment out (or don't include) services that you don't want to use -->
+    <!--- <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script> -->
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <script>
+        $(document).ready(function () {
+            $("#header").load("header.html");
+        });
+
+        var file ;
+        var reader ;
+        var fileName;
+
+
+        function add() {
+            var name = document.forms["ADD"]["name"].value;
+            var price = document.forms["ADD"]["price"].value;
+            var quantity = document.forms["ADD"]["quant"].value;
+            var type = document.forms["ADD"]["type"].value;
+            var size = document.forms["ADD"]["size"].value;
+            var sex = document.forms["ADD"]["sex"].value;
+            const id = auth.currentUser.uid;
+
+            var quantit = "quantity-"+size ;
+
+            db.collection("products")
+                .add({
+                    name: name,
+                    price: price,
+                    type: type,
+                    [quantit]: quantity,
+                    fileName: fileName,
+                    user: id,
+                    sex: sex
+                })
+                .then(function(docRef) {
+                    storage.child(docRef.id +'/'+ file.name).put(file);
+                }).then(function () {
+                    alert("uploaded") ;
+                })
+                .catch(function(error) {
+                    console.error("Error adding document: ", error);
+                    alert("error uploading") ;
+                });
+        }
+
+        function previewFile() {
+            reader = new FileReader();
+            file = document.querySelector('input[type=file]').files[0];
+            fileName= file.name ;
+            var preview = document.getElementById('images');
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+                document.getElementById("filesNames").innerText = fileName ;
+
+            } else {
+                preview.src = "";
+            }
+        }
+
+        function deletes(){
+            const id = auth.currentUser.uid;
+            var name = document.forms["DELETE"]["del_name"].value ;
+            db.collection("stores").doc(id).collection("products").where("name", "==", name).get()
+                .then(function (snapshot) {
+                    snapshot.docs.forEach(function (doc) {
+                        console.log(doc.id) ;
+                    });
+                });
+            /*db.collection("stores").doc(id).collection("products").doc()
+                .delete().then(function() {
+                console.log("Document successfully deleted!");
+            }).catch(function(error) {
+                console.error("Error removing document: ", error);
+            });
+            */
+        }
+
+
+        function search(){
+            var searchText = document.forms["SEARCH"]["search_q"].value ;
+            db.collection("stores").doc(auth.currentUser.uid).collection("products")
+                .orderBy("name").startAt(searchText).get()
+                .then(function (snapshot) {
+                    snapshot.docs.forEach(
+                     function (doc) {
+                         console.log(doc.data().price) ;
+                        }
+                    )
+            });
+
+        }
+
+        $(document).ready(function () {
+            $("#type").change(function () {
+                var val = $(this).val();
+                if (val == "shirt") {
+                    console.log("shirt");
+                    $("#size").html("<option value='small'>small</option><option value='medium'>medium</option><option value='large'>large</option><option value='xl'>XL</option>");
+                } else if (val == "shoes") {
+                    $("#size").html("<option value='7'>7</option><option value='8'>8</option><option value='9'>9</option>");
+                } else if (val == "pant") {
+                    $("#size").html("<option value='28'>28</option><option value='30'>30</option><option value='32'>32</option>");
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<div id="header"></div>
+
+<div class="container">
+    <h2>Add Product</h2><br>
+    <form name="ADD" method="post">
+        <div class="form-group">
+            <label>Name of product:</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter Product Name" name="name">
+        </div>
+        <div class="form-group">
+            <label>Price of product:</label>
+            <input type="number" class="form-control" id="price" placeholder="Enter Product Price" name="price">
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <label for="type">Product Type</label>
+                <select class="form-control" id="type">
+                    <option>shirt</option>
+                    <option>shoes</option>
+                    <option>pant</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="sex">Sex:</label>
+                <select class="form-control" id="sex">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Unisex</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="size">Product Size:</label>
+                <select class="form-control" id="size">
+                    <option value="">-- select one -- </option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label>Quantity of product:</label>
+                <input type="number" class="form-control" id="quant" placeholder="Enter Product Quantity" name="quantity">
+            </div>
+        </div>
+
+        <label>Image of product:</label>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile" onchange="previewFile()">
+            <label class="custom-file-label" for="customFile" id="filesNames">Choose file</label><br><br>
+            <img id="images" src="" height="150" alt="Image preview...">
+        </div>
+        <br><br><br><br>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onClick="add()">Add product</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <h2>Edit Product</h2><br>
+    <form name="SEARCH" method="post">
+        <div class="input-group mb-3">
+            <input type="text" id="search_q" class="form-control" oplaceholder="Search product" aria-label="Search product" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" onclick="search()">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script>
+
+    <script>
+        var config = {
+        apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
+        authDomain: "loco-f1182.firebaseapp.com",
+        databaseURL: "https://loco-f1182.firebaseio.com",
+        projectId: "loco-f1182",
+        storageBucket: "loco-f1182.appspot.com",
+        messagingSenderId: "907665553764"
+    };
+
+    firebase.initializeApp(config);
+    var db = firebase.firestore();
+    var auth = firebase.auth() ;
+
+    </script>
+
+    <!-- Add additional services that you want to use -->
+
+    <!-- Comment out (or don't include) services that you don't want to use -->
+    <!--- <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script> -->
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+
+<script>
+
+    function hide(){
+        var user = document.getElementById("role").options[document.getElementById("role").selectedIndex].value ;
+        if(user!="Shopkeeper"){
+            document.getElementById("shop").style.visibility="hidden" ;
+        }
+        else {
+            document.getElementById("shop").style.visibility="visible" ;
+        }
+    }
+
+    function authenticate() {
+        var email = document.forms["SignUp"]["email"].value;
+        var password = document.forms["SignUp"]["pswd"].value;
+        var name = document.forms["SignUp"]["name"].value;
+        var area = document.forms["SignUp"]["area"].value;
+        var role = document.forms["SignUp"]["role"].value;
+
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+            console.log(errorMessage) ;
+
+        }).then( function () {
+            alert("account created") ;
+            let id = auth.currentUser.uid ;
+
+            if(role=="Shopkeeper") {
+                db.collection("stores").doc(id).set({
+                    name: name,
+                    area: area,
+                    role: role
+                }).then(function () {
+                    window.location.replace("shopkeeper.html");
+
+                }).then(function (docRef) {
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                    .catch(function (error) {
+                        console.error("Error adding document: ", error);
+                    });
+            }
+
+            if(role=="Customer") {
+                db.collection("Customer").doc(id).set({
+                    area: area,
+                    role: role
+                }).then(function () {
+                    window.location.replace("index.html");
+
+                }).then(function (docRef) {
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                    .catch(function (error) {
+                        console.error("Error adding document: ", error);
+                    });
+            }
+        }) ;
+
+    }
+
+</script>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign Up Form</h2>
+    <form name="SignUp" method="post">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd">
+        </div>
+        <div class="form-group">
+            <label for="role">Select Role:</label>
+            <select class="form-control" id="role" name="role" onchange="hide()">
+                <option>Shopkeeper</option>
+                <option>Delivery</option>
+                <option>Customer</option>
+            </select>
+        </div>
+        <div class="form-group" id="shop">
+            <label>Name of store:</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter Store Name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="area">Select Area:</label>
+            <select class="form-control" id="area" name="area">
+                <option>Kothrud</option>
+                <option>Baner</option>
+                <option>Aundh</option>
+                <option>Koregaon Park</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-primary" onClick="authenticate()">Submit</button>
+    </form>
+<br><br>
+    <span><h4>Already have an account? </h4><a href="Login.html">Login</a></span>
+</div>
+
+</body>
+</html>
