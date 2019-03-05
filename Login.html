@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <!-- Firebase App is always required and must be first -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
@@ -66,11 +69,17 @@
             });
     }
 
+        $(function () {
+            $("#header").load("header.html");
+        })
 
 </script>
 
 </head>
 <body>
+
+<div id="header"></div>
+
 
 <div class="container">
     <h2>Stacked form</h2>

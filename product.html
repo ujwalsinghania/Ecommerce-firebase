@@ -5,6 +5,7 @@
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
 
 	<script>
 		var config = {
@@ -19,6 +20,7 @@
 		firebase.initializeApp(config);
 		var db = firebase.firestore();
 		var auth = firebase.auth() ;
+        var storage = firebase.storage() ;
 
 	</script>
 
@@ -51,29 +53,34 @@
 	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	<script>
-
+		var id = localStorage.getItem("id").toString() ;
 		$(document).ready(function () {
 			$("#header").load("header.html");
-			get() ;
+            db.collection("products").doc(id).get().then(function (doc) {
+                document.getElementById("title").innerHTML = doc.data().name ;
+                document.getElementById("price").innerHTML = '&#8377;'+ doc.data().price;
+
+                storage.ref().child(doc.id+'/'+doc.data().fileName)
+                    .getDownloadURL().then(function (url) {
+                        document.getElementById("prd_image").src = url.toString() ;
+                })
+            });
+			
 		});
 
-		function get(){
-			db.collection("stores").where("isAdmin", "==", false).orderBy("name", "asc").get().then( (snapshot) => {
-				const arr= [];
-				snapshot.docs.forEach( doc => {
-					let id= doc.id ;
-					let name= doc.data().name ;
-					let days = doc.data().days ;
-					arr.push({id: id, name: name, days: days})
-				}) ;
-				this.setState( {
-					//allUsers: prevState.allUsers.concat({id: id, name: name}) ;
-					allUsers: arr
-				})
-			}).catch(error => {
-						console.error(error);
-					});
+		function setCookie() {
+			/*var expires = "";
+			var date = new Date();
+			date.setTime(date.getTime() + (7*24*60*60*1000));
+			expires = "; expires=" + date.toUTCString();
+			document.cookie = "id= " + id + "; expires=" +expires;
+			alert("added to cookie " + id + expires) ;
+		*/
+			document.cookie = "name=oeschger";
+			document.cookie = "favorite_food=tripe";
+			alert(document.cookie);
 		}
+
 
 	</script>
 
@@ -178,20 +185,20 @@
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="product-pic-zoom">
-						<img class="product-big-img" src="img/single-product/1.jpg" alt="">
+						<img class="product-big-img" id="prd_image" src="img/single-product/1.jpg" alt="">
 					</div>
-					<div class="product-thumbs" tabindex="1" style="overflow: hidden; outline: none;">
+					<!--<div class="product-thumbs" tabindex="1" style="overflow: hidden; outline: none;">
 						<div class="product-thumbs-track">
 							<div class="pt active" data-imgbigurl="img/single-product/1.jpg"><img src="img/single-product/thumb-1.jpg" alt=""></div>
 							<div class="pt" data-imgbigurl="img/single-product/2.jpg"><img src="img/single-product/thumb-2.jpg" alt=""></div>
 							<div class="pt" data-imgbigurl="img/single-product/3.jpg"><img src="img/single-product/thumb-3.jpg" alt=""></div>
 							<div class="pt" data-imgbigurl="img/single-product/4.jpg"><img src="img/single-product/thumb-4.jpg" alt=""></div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="col-lg-6 product-details">
-					<h2 class="p-title">White peplum top</h2>
-					<h3 class="p-price">$39.90</h3>
+					<h2 class="p-title" id="title">White peplum top</h2>
+					<h3 class="p-price" id="price"></h3>
 					<h4 class="p-stock">Available: <span>In Stock</span></h4>
 					<div class="p-rating">
 						<i class="fa fa-star-o"></i>
@@ -234,7 +241,7 @@
 						<p>Quantity</p>
                         <div class="pro-qty"><input type="text" value="1"></div>
                     </div>
-					<a href="#" class="site-btn">SHOP NOW</a>
+					<a href="#" onclick="setCookie()" class="site-btn">SHOP NOW</a>
 					<div id="accordion" class="accordion-area">
 						<div class="panel">
 							<div class="panel-header" id="headingOne">
@@ -351,8 +358,7 @@
 					<div class="pi-pic">
 						<img src="./img/product/6.jpg" alt="">
 						<div class="pi-links">
-							<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+							<a href="cart.html" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
 						</div>
 					</div>
 					<div class="pi-text">
