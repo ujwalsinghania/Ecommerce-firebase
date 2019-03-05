@@ -54,31 +54,41 @@
 	<![endif]-->
 	<script>
 		var id = localStorage.getItem("id").toString() ;
+		var name;
+		var price ;
+		var urls ;
+		var type ;
+
 		$(document).ready(function () {
 			$("#header").load("header.html");
             db.collection("products").doc(id).get().then(function (doc) {
                 document.getElementById("title").innerHTML = doc.data().name ;
+                name = doc.data().name  ;
                 document.getElementById("price").innerHTML = '&#8377;'+ doc.data().price;
-
-                storage.ref().child(doc.id+'/'+doc.data().fileName)
+				price = doc.data().price ;
+                type = doc.data().type ;
+				storage.ref().child(doc.id+'/'+doc.data().fileName)
                     .getDownloadURL().then(function (url) {
                         document.getElementById("prd_image").src = url.toString() ;
-                })
+            			urls = url.toString() ;
+                    })
             });
 			
 		});
 
 		function setCookie() {
-			/*var expires = "";
-			var date = new Date();
-			date.setTime(date.getTime() + (7*24*60*60*1000));
-			expires = "; expires=" + date.toUTCString();
-			document.cookie = "id= " + id + "; expires=" +expires;
-			alert("added to cookie " + id + expires) ;
-		*/
-			document.cookie = "name=oeschger";
-			document.cookie = "favorite_food=tripe";
-			alert(document.cookie);
+
+				var ArrayData = [];
+				var storedData = localStorage.getItem("cart");
+
+				if (storedData) {
+					ArrayData = JSON.parse(storedData);
+					console.log(ArrayData);
+				}
+				ArrayData.push({id: id , name: name, price: price, url: urls});
+				localStorage.setItem("cart", JSON.stringify(ArrayData));
+				alert("item added to cart");
+
 		}
 
 
@@ -224,18 +234,7 @@
 							<input type="radio" name="sc" id="m-size" checked="">
 							<label for="m-size">36</label>
 						</div>
-						<div class="sc-item">
-							<input type="radio" name="sc" id="l-size">
-							<label for="l-size">38</label>
-						</div>
-						<div class="sc-item disable">
-							<input type="radio" name="sc" id="xl-size" disabled>
-							<label for="xl-size">40</label>
-						</div>
-						<div class="sc-item">
-							<input type="radio" name="sc" id="xxl-size">
-							<label for="xxl-size">42</label>
-						</div>
+
 					</div>
 					<div class="quantity">
 						<p>Quantity</p>

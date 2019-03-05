@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm order</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
+
+
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
+            authDomain: "loco-f1182.firebaseapp.com",
+            databaseURL: "https://loco-f1182.firebaseio.com",
+            projectId: "loco-f1182",
+            storageBucket: "loco-f1182.appspot.com",
+            messagingSenderId: "907665553764"
+        };
+
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+        var auth = firebase.auth() ;
+        var storage = firebase.storage() ;
+
+        $(function () {
+            $("#header").load("header.html");
+        });
+
+        function placeOrder() {
+            let id = auth.currentUser.uid;
+            if (id == null) {
+                alert("not logged in ");
+            }
+            else {
+                var storedData = localStorage.getItem("cart");
+                var items = [] ;
+                items = JSON.parse(storedData);
+
+                var address = document.forms["confirm"]["email"].value;
+                var name = document.forms["confirm"]["name"].value;
+
+                var names = [];
+                var prices =  [];
+
+                for(var i=0;i<items.length;i++){
+                    names.push(items[i].name) ;
+                    prices.push(items[i].price) ;
+                }
+
+                db.collection("orders").add({
+                    user: id,
+                    products :names,
+                    address: address,
+                    prices: prices,
+                    name: name
+                }).then(function () {
+                    alert("order placed") ;
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div id="header"></div>
+
+<div class="pix_section pix-padding" id="section_forms_2" style="display: block;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-xs-12 col-sm-6 column ui-droppable">
+                <div class="pix-content">
+                    <h2 class="pix-black-gray-dark pix-no-margin-bottom">
+                        <span class="pix_edit_text">Our Address</span>
+                    </h2>
+                    <p class="pix-black-gray-light big-text pix-padding-bottom-20">
+                        <span class="pix_edit_text">121 King Street, Melbourne Victoria 3000 Australia.<br><strong>Envato Pty Ltd</strong></span>
+                    </p>
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d89083.20802621171!2d4.844302!3d45.754148!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1498852308813" width="940" height="350"></iframe>
+                    </div>
+                </div><br>
+                <div class="pix-content">
+                    <h2 class="pix-black-gray-dark pix-no-margin-bottom">
+                        <span class="pix_edit_text">Our phone number</span>
+                    </h2>
+                    <p class="pix-black-gray-light big-text pix-padding-bottom-20">
+                        <span class="pix_edit_text">+91 8323450989<br><strong>India</strong></span>
+                    </p>
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d89083.20802621171!2d4.844302!3d45.754148!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1498852308813" width="940" height="350"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12 col-sm-6 column ui-droppable">
+                <div class="pix-content pix-radius-3">
+                    <h2 class="pix-black-gray-dark pix-no-margin-bottom">
+                        <span class="pix_edit_text">Confirm Order</span>
+                    </h2>
+                    <p class="pix-black-gray-light big-text pix-padding-bottom-20">
+                        <span class="pix_edit_text">please enter your details below</span>
+                    </p>
+
+                    <form class="pix-form-style pixfort-form ui-sortable" name="confirm">
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control" placeholder="Enter Your Full Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Enter Your Email Address">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="address" rows="5" placeholder="Enter your delivery Address"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary pix-white btn-md small-text btn-block" onclick="placeOrder()"><span class="pix_edit_text"><strong>Confirm Order</strong></span></button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

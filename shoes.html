@@ -57,7 +57,7 @@
 	<script>
 
         function changes(id){
-        	alert("id" +id) ;
+        	//alert("id" +id) ;
             localStorage.setItem("id",id) ;
             window.location.replace("product.html") ;
         }
@@ -65,7 +65,7 @@
 
 		function createCard(cardData) {
 			var cardTemplate = [
-				'<div class="col-lg-4 col-sm-6">',
+				'<div class="col-lg-4 col-sm-6" style="margin-bottom: 80px">',
 					'<div class="product-item">',
 					'<div class="card" style="border: 0; height: 399px">',
 						'<div class="pi-pic">',
@@ -147,7 +147,6 @@
 	</div>
 
     <div id="header"></div>
-
 
 	<!-- Page info -->
 	<div class="page-top-info">

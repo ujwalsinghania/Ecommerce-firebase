@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html>
 <head>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="checkAuth.js"></script>
 
 	<title>Divisima | eCommerce Template</title>
 	<meta charset="UTF-8">
@@ -33,90 +34,65 @@
 	<![endif]-->
 
 	<script>
+		var items = [] ;
+		var total =0;
 		$(document).ready(function () {
-			alert(document.cookie) ;
-			var decodedCookie = decodeURIComponent(document.cookie);
-			console.log(decodedCookie) ;
-		})
+			var storedData = localStorage.getItem("cart");
+			console.log(storedData);
+			items =  JSON.parse(storedData);
+			console.log(items);
+			console.log(items[0]);
+
+			for(
+				var i=0;i<items.length;i++){
+					total = total + parseInt(items[i].price) ;
+					$('#table_ins').append(
+							'<tr>',
+								'<td class="product-col">',
+									'<img width="73px" height="72px" src='+'"'+items[i].url +'"'+'>',
+										'<div class="pc-title">',
+											'<h4>'+items[i].name+'</h4>',
+											'<p>&#8377; '+items[i].price+'</p>',
+										'</div>',
+								'</td>',
+								'<td class="quy-col">',
+									'<div class="quantity">',
+										'<div class="pro-qty">',
+											'<input type="text" value="1">',
+										'</div>',
+									'</div>',
+								'</td>',
+								'<td class="total-col"><h4>&#8377; '+items[i].price+'</h4></td>',
+							'</tr>'
+					) ;
+			}
+					document.getElementById("total").innerText = total
+		});
+
+		$(function () {
+			$("#header").load("header.html");
+		});
+
+		function clears() {
+			alert("cart cleared");
+			localStorage.getItem("cart");
+			localStorage.removeItem("cart");
+			var arr=JSON.stringify([]);
+			localStorage.setItem("cart", arr) ;
+			window.location.replace("cart.html") ;
+		}
+
 	</script>
 
 
 </head>
-<body>
+<body onload="check()">
 	<!-- Page Preloder -->
 	<div id="preloder">
 		<div class="loader"></div>
 	</div>
 
-	<!-- Header section -->
-	<header class="header-section">
-		<div class="header-top">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-2 text-center text-lg-left">
-						<!-- logo -->
-						<a href="./index.html" class="site-logo">
-							<img src="img/logo.png" alt="">
-						</a>
-					</div>
-					<div class="col-xl-6 col-lg-5">
-						<form class="header-search-form">
-							<input type="text" placeholder="Search on divisima ....">
-							<button><i class="flaticon-search"></i></button>
-						</form>
-					</div>
-					<div class="col-xl-4 col-lg-5">
-						<div class="user-panel">
-							<div class="up-item">
-								<i class="flaticon-profile"></i>
-								<a href="#">Sign</a> In or <a href="#">Create Account</a>
-							</div>
-							<div class="up-item">
-								<div class="shopping-card">
-									<i class="flaticon-bag"></i>
-									<span>0</span>
-								</div>
-								<a href="#">Shopping Cart</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<nav class="main-navbar">
-			<div class="container">
-				<!-- menu -->
-				<ul class="main-menu">
-					<li><a href="#">Home</a></li>
-					<li><a href="#">Women</a></li>
-					<li><a href="#">Men</a></li>
-					<li><a href="#">Jewelry
-						<span class="new">New</span>
-					</a></li>
-					<li><a href="#">Shoes</a>
-						<ul class="sub-menu">
-							<li><a href="#">Sneakers</a></li>
-							<li><a href="#">Sandals</a></li>
-							<li><a href="#">Formal Shoes</a></li>
-							<li><a href="#">Boots</a></li>
-							<li><a href="#">Flip Flops</a></li>
-						</ul>
-					</li>
-					<li><a href="#">Pages</a>
-						<ul class="sub-menu">
-							<li><a href="./product.html">Product Page</a></li>
-							<li><a href="./category.html">Category Page</a></li>
-							<li><a href="./cart.html">Cart Page</a></li>
-							<li><a href="./checkout.html">Checkout Page</a></li>
-							<li><a href="./contact.html">Contact Page</a></li>
-						</ul>
-					</li>
-					<li><a href="#">Blog</a></li>
-				</ul>
-			</div>
-		</nav>
-	</header>
-	<!-- Header section end -->
+	<div id="header"></div>
 
 
 	<!-- Page info -->
@@ -145,11 +121,11 @@
 								<tr>
 									<th class="product-th">Product</th>
 									<th class="quy-th">Quantity</th>
-									<th class="size-th">SizeSize</th>
 									<th class="total-th">Price</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id ="table_ins">
+								<!--table insert-->
 								<tr>
 									<td class="product-col">
 										<img src="img/cart/1.jpg" alt="">
@@ -165,50 +141,31 @@
 											</div>
                     					</div>
 									</td>
-									<td class="size-col"><h4>Size M</h4></td>
 									<td class="total-col"><h4>$45.90</h4></td>
 								</tr>
+
 								<tr>
 									<td class="product-col">
-										<img src="img/cart/2.jpg" alt="">
+										<img src="img/cart/1.jpg" alt="">
 										<div class="pc-title">
-											<h4>Ruffle Pink Top</h4>
+											<h4>Animal Print Dress</h4>
 											<p>$45.90</p>
 										</div>
 									</td>
 									<td class="quy-col">
 										<div class="quantity">
-					                        <div class="pro-qty">
+											<div class="pro-qty">
 												<input type="text" value="1">
 											</div>
-                    					</div>
-									</td>
-									<td class="size-col"><h4>Size M</h4></td>
-									<td class="total-col"><h4>$45.90</h4></td>
-								</tr>
-								<tr>
-									<td class="product-col">
-										<img src="img/cart/3.jpg" alt="">
-										<div class="pc-title">
-											<h4>Skinny Jeans</h4>
-											<p>$45.90</p>
 										</div>
 									</td>
-									<td class="quy-col">
-										<div class="quantity">
-					                        <div class="pro-qty">
-												<input type="text" value="1">
-											</div>
-                    					</div>
-									</td>
-									<td class="size-col"><h4>Size M</h4></td>
 									<td class="total-col"><h4>$45.90</h4></td>
 								</tr>
 							</tbody>
 						</table>
 						</div>
 						<div class="total-cost">
-							<h6>Total <span>$99.90</span></h6>
+							<h6>Total <span id="total"></span></h6>
 						</div>
 					</div>
 				</div>
@@ -217,7 +174,8 @@
 						<input type="text" placeholder="Enter promo code">
 						<button>Submit</button>
 					</form>
-					<a href="" class="site-btn">Proceed to checkout</a>
+					<button class="site-btn sb-dark" onClick="clears()">CLEAR CART</button>
+					<a href="confirm.html" class="site-btn">Proceed to checkout</a>
 					<a href="" class="site-btn sb-dark">Continue shopping</a>
 				</div>
 			</div>

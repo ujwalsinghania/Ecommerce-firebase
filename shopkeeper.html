@@ -44,10 +44,6 @@
     <link rel="stylesheet" href="css/style.css"/>
 
     <script>
-        $(document).ready(function () {
-            $("#header").load("header.html");
-        });
-
         var file ;
         var reader ;
         var fileName;
@@ -138,6 +134,8 @@
         }
 
         $(document).ready(function () {
+            $("#header").load("header.html");
+
             $("#type").change(function () {
                 var val = $(this).val();
                 if (val == "shirt") {
@@ -153,7 +151,7 @@
     </script>
 
 </head>
-<body>
+<body onload="check()">
 
 <div id="header"></div>
 

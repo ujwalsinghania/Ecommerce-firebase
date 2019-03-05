@@ -1,16 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+    <!-- Firebase App is always required and must be first -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="checkAuth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
+            authDomain: "loco-f1182.firebaseapp.com",
+            databaseURL: "https://loco-f1182.firebaseio.com",
+            projectId: "loco-f1182",
+            storageBucket: "loco-f1182.appspot.com",
+            messagingSenderId: "907665553764"
+        };
+
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+        var auth = firebase.auth() ;
+
+    </script>
+
+    <!-- Add additional services that you want to use -->
+
+    <!-- Comment out (or don't include) services that you don't want to use -->
+    <!--- <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script> -->
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
 
 
+    <script>
+        var names = [] ;
+        var prices = [] ;
+        var address ;
 
+        $(document).ready(function () {
+            $("#header").load("header.html");
+
+            var id = localStorage.getItem("current_user");
+
+            db.collection("orders").where("user", "==", id).get().then(function (snapshot) {
+                snapshot.docs.forEach(function (doc) {
+                    names = doc.data().names ;
+                    prices = doc.data().prices ;
+                    address = doc.data().address ;
+                })
+            })
+
+        });
+
+        function get() {
+                var tables = "<table class='table'>" +
+                    "<thead><tr><th>Name</th><th>Price</th></tr></thead>" +
+                    "<tbody>" ;
+
+            for(var i =0;i<prices.length;i++){
+                tables = tables + '<tr><td>'+names[i]+'</td>' + '<td>'+prices[i]+'</td></tr>'
+            }
+            var end = tables + '</tr></tbody></table>' ;
+
+            document.getElementById("box").innerHTML = end ;
+
+            document.getElementById("address").innerText= "delivering to address: " + address ;
+        }
+
+
+    </script>
 
 </head>
-<body>
+<body onload="check()">
 
+<div id="header"></div>
 
+<center><button onclick="get()" class="site-btn">Get Items</button></center>
+<br><br><br>
+
+<div class="" id="box" style="padding-left: 200px; padding-right: 200px">
+</div>
+<br><br>
+<div class="" style="padding-left: 200px; padding-right: 200px">
+    <h3 id="address"></h3>
+</div>
 
 </body>
 </html>
