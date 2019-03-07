@@ -2,7 +2,6 @@
 <html lang="zxx">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
@@ -78,7 +77,9 @@
             auth.onAuthStateChanged(function (user){
                 if(user) {
                     const id = user.uid;
+
                     localStorage.setItem("current_user", id);
+
                     var role = localStorage.getItem("role");
                     if (role == "Shopkeeper") {
                         db.collection("stores").doc(id).get().then(function (doc) {

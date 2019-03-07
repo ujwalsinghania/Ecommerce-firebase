@@ -60,6 +60,7 @@
         var area = document.forms["SignUp"]["area"].value;
         var role = document.forms["SignUp"]["role"].value;
 
+
         firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
@@ -70,6 +71,7 @@
         }).then( function () {
             alert("account created") ;
             let id = auth.currentUser.uid ;
+            localStorage.setItem("role",role);
 
             if(role=="Shopkeeper") {
                 db.collection("stores").doc(id).set({
@@ -103,7 +105,7 @@
             }
             if(role=="Delivery") {
                 db.collection("Delivery").doc(id).set({
-                    area: area,
+                    area1: false,
                     role: role,
                     area2: false,
                     area3: false

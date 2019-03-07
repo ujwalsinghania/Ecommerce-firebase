@@ -2,13 +2,9 @@
 <html lang="zxx">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="checkAuth.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
 
     <script>
         var config = {
@@ -23,9 +19,8 @@
         firebase.initializeApp(config);
         var db = firebase.firestore();
         var auth = firebase.auth() ;
-        var storageRef = firebase.storage().ref() ;
-    </script>
 
+    </script>
 
     <title>Divisima | eCommerce Template</title>
     <meta charset="UTF-8">
@@ -56,11 +51,76 @@
     <![endif]-->
 
     <script>
-        $(function () {
-            $("#header").load("header.html");
-        });
 
-        function getOrders(){
+        function shopkeeper() {
+            $("#shop_button").css('visibility', 'visible')
+                .click( function () {
+                    window.location.replace("shopkeeper.html") ;
+                })
+        }
+
+        function customer() {
+            $("#cust_button").css('visibility', 'visible')
+                .click(function () {
+                    window.location.replace("customer.html") ;
+                })
+        }
+
+        function delivery(){
+            $("#delivery_button").css('visibility', 'visible')
+                .click(function () {
+                    window.location.replace("delivery.html") ;
+                })
+        }
+
+        function check(){
+            auth.onAuthStateChanged(function (user){
+                if(user) {
+                    const id = user.uid;
+
+                    localStorage.setItem("current_user", id);
+
+                    var role = localStorage.getItem("role");
+                    if (role == "Shopkeeper") {
+                        db.collection("stores").doc(id).get().then(function (doc) {
+                            if ((doc.data().role) == "Shopkeeper") {
+                                shopkeeper();
+                            }
+                        });
+                    }
+                    if (role == "Delivery") {
+                        db.collection("Delivery").doc(id).get().then(function (doc) {
+                            if ((doc.data().role) == "Delivery") {
+                                delivery();
+                            }
+                        });
+                    }
+                    if (role == "Customer") {
+                        db.collection("Customer").doc(id).get().then(function (doc) {
+                            if ((doc.data().role) == "Customer") {
+                                customer();
+                            }
+                        });
+                    }
+
+
+                    $("#login").css('visibility', 'hidden');
+                    $("#logout").css('visibility', 'visible').click(function () {
+                        auth.signOut().then(function () {
+                            // Sign-out successful.
+                        }).catch(function (error) {
+                            alert(error);
+                        });
+                    });
+                }
+                else{
+                    console.log("no user") ;
+                }
+            });
+        }
+    </script>
+    <script>
+        function submitArea(){
            /* if(document.forms["areas"]["Kothrud"].checked==true) {
                 var kothrud =[] ;
 
@@ -85,19 +145,25 @@
                         document.getElementById("items").append(template) ;
                     });
             }*/
-            if(document.forms["areas"]["area1"].checked==true) {
-                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+
+            allItems = [];
+
+            var id = localStorage.getItem("current_user");
+
+            if(document.getElementById("area1").checked) {
+                   db.collection("Delivery").doc(localStorage.getItem("current_user"))
                     .update({
                         area1: true
-                    })
+                    });
+
             }
-            if(document.forms["areas"]["area2"].checked==true) {
+            if(document.getElementById("area2").checked) {
                 db.collection("Delivery").doc(localStorage.getItem("current_user"))
                     .update({
                         area2: true
                     })
             }
-            if(document.forms["areas"]["area3"].checked==true) {
+            if(document.getElementById("area3").checked) {
                 db.collection("Delivery").doc(localStorage.getItem("current_user"))
                     .update({
                         area3: true
@@ -105,34 +171,114 @@
             }
         }
 
+
+       function getOrders(){
+           db.collection("orders").where("dperson","==",id).get()
+               .then(function (querySnapshot) {
+                   querySnapshot.forEach(function(doc) {
+                        allItems()
+                   });
+               }).catch(function(error) {
+               console.log("Error getting documents: ", error);
+           });
+        }
+
+
     </script>
 
 </head>
 
 <body onload="check()">
 
-<div id="header"></div>
-
+<!-- Header section -->
+<header class="header-section">
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 text-center text-lg-left">
+                    <!-- logo -->
+                    <a href="./index.html" class="site-logo">
+                        <img src="img/logo.png" alt="">
+                    </a>
+                </div>
+                <div class="col-xl-5 col-lg-4">
+                    <form class="header-search-form">
+                        <input type="text" placeholder="Search on divisima ....">
+                        <button><i class="flaticon-search"></i></button>
+                    </form>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="user-panel">
+                        <div class="up-item">
+                            <i class="flaticon-profile"></i>
+                            <a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
+                        </div>
+                        <div class="up-item">
+                            <i class="flaticon-bag"></i>
+                            <a href="cart.html">Shopping Cart</a>
+                        </div>
+                        <div class="up-item">
+                            <a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+                            <a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
+                            <a href="#" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="main-navbar">
+        <div class="container">
+            <!-- menu -->
+            <ul class="main-menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="women.html">Women</a></li>
+                <li><a href="men.html">Men</a></li>
+                <li><a href="shoes.html">Shoes</a>
+                    <ul class="sub-menu">
+                        <li><a href="#">Sneakers</a></li>
+                        <li><a href="#">Sandals</a></li>
+                        <li><a href="#">Formal Shoes</a></li>
+                        <li><a href="#">Boots</a></li>
+                        <li><a href="#">Flip Flops</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Pages</a>
+                    <ul class="sub-menu">
+                        <li><a href="./product.html">Product Page</a></li>
+                        <li><a href="./category.html">Category Page</a></li>
+                        <li><a href="./cart.html">Cart Page</a></li>
+                        <li><a href="./checkout.html">Checkout Page</a></li>
+                        <li><a href="./contact.html">Contact Page</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<br><br>
+<!-- Header section end -->
 
 <form name="areas" method="post">
 <div class="form-check">
     <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" name="Kothrud" value="area1">Kothrud
+        <input type="checkbox" class="form-check-input" value="area1" id="area1">Kothrud
     </label>
 </div>
 <div class="form-check">
     <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" name="Baner" value="area2">Baner
+        <input type="checkbox" class="form-check-input" id="area2" value="area2">Baner
     </label>
 </div>
 <div class="form-check disabled">
     <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" name="S.B" value="area3">S.B Road
+        <input type="checkbox" class="form-check-input" id="area3" value="area3">S.B Road
     </label>
 </div>
-    <button type="button" class="btn btn-primary" onClick="getOrders()">Submit</button>
-
+    <button type="button" class="btn btn-primary" onClick="submitArea()">Submit</button>
 </form>
+<button type="button" class="btn btn-primary" onClick="getOrders()">Get orders</button>
 
 <div id="items"></div>
 

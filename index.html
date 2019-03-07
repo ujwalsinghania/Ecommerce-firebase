@@ -87,7 +87,7 @@
 						});
 					}
 					if (role == "Delivery") {
-						db.collection("delivery").doc(id).get().then(function (doc) {
+						db.collection("Delivery").doc(id).get().then(function (doc) {
 							if ((doc.data().role) == "Delivery") {
 								delivery();
 							}
@@ -159,7 +159,7 @@
 							<div class="up-item">
 								<a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
 								<a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
-								<a href="#" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
+								<a href="delivery.html" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
 							</div>
 						</div>
 					</div>

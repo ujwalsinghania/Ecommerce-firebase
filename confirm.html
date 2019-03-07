@@ -1,24 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zxx">
 <head>
-    <meta charset="UTF-8">
-    <title>Confirm order</title>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
-
-
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="css/flaticon.css"/>
-    <link rel="stylesheet" href="css/slicknav.min.css"/>
-    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
-    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
-    <link rel="stylesheet" href="css/animate.css"/>
-    <link rel="stylesheet" href="css/style.css"/>
 
     <script>
         var config = {
@@ -33,16 +19,188 @@
         firebase.initializeApp(config);
         var db = firebase.firestore();
         var auth = firebase.auth() ;
-        var storage = firebase.storage() ;
+
+    </script>
+
+    <title>Divisima | eCommerce Template</title>
+    <meta charset="UTF-8">
+    <meta name="description" content=" Divisima | eCommerce Template">
+    <meta name="keywords" content="divisima, eCommerce, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="shortcut icon"/>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+
+        function shopkeeper() {
+            $("#shop_button").css('visibility', 'visible')
+                .click( function () {
+                    window.location.replace("shopkeeper.html") ;
+                })
+        }
+
+        function customer() {
+            $("#cust_button").css('visibility', 'visible')
+                .click(function () {
+                    window.location.replace("customer.html") ;
+                })
+        }
+
+        function delivery(){
+            $("#delivery_button").css('visibility', 'visible')
+                .click(function () {
+                    window.location.replace("delivery.html") ;
+                })
+        }
+
+        function check(){
+            auth.onAuthStateChanged(function (user){
+                if(user) {
+                    const id = user.uid;
+
+                    localStorage.setItem("current_user", id);
+
+                    var role = localStorage.getItem("role");
+                    if (role == "Shopkeeper") {
+                        db.collection("stores").doc(id).get().then(function (doc) {
+                            if ((doc.data().role) == "Shopkeeper") {
+                                shopkeeper();
+                            }
+                        });
+                    }
+                    if (role == "Delivery") {
+                        db.collection("Delivery").doc(id).get().then(function (doc) {
+                            if ((doc.data().role) == "Delivery") {
+                                delivery();
+                            }
+                        });
+                    }
+                    if (role == "Customer") {
+                        db.collection("Customer").doc(id).get().then(function (doc) {
+                            if ((doc.data().role) == "Customer") {
+                                customer();
+                            }
+                        });
+                    }
+
+
+                    $("#login").css('visibility', 'hidden');
+                    $("#logout").css('visibility', 'visible').click(function () {
+                        auth.signOut().then(function () {
+                            // Sign-out successful.
+                        }).catch(function (error) {
+                            alert(error);
+                        });
+                    });
+                }
+                else{
+                    console.log("no user") ;
+                }
+            });
+        }
+    </script>
+
+        <script>
+        var persons = [] ;
 
         $(function () {
-            $("#header").load("header.html");
+            if(document.getElementById("area").selectedIndex == 0) {
+                db.collection("Delivery").where("area1","==",true).get()
+                    .then(function (querySnapshot) {
+                        querySnapshot.forEach(function (doc) {
+                            persons.push(doc.id) ;
+                        });
+                    }).catch(function (error) {
+                    console.log(error) ;
+                });
+
+            }
+
+            if(document.getElementById("area").selectedIndex ==1) {
+                db.collection("Delivery").where("area2","==",true).get().then(function (snapshot) {
+                    snapshot.forEach(function (doc) {
+                        persons.push(doc.id) ;
+                    })
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+            if(document.getElementById("area").selectedIndex == 2) {
+                db.collection("Delivery").where("area3","==",true).get().then(function (snapshot) {
+                    snapshot.forEach(function (doc) {
+                        persons.push(doc.id) ;
+                    })
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
         });
 
-        var persons =[] ;
+        /*function assign(){
+            var persons = [] ;
+            if(document.getElementById("area").selectedIndex == 0) {
+               alert("index 1");
+                db.collection("Delivery").where("area1","==",true).get()
+                    .then(function (querySnapshot) {
+                        querySnapshot.forEach(function (doc) {
+                            persons.push(doc.id) ;
+                        });
+                    }).catch(function (error) {
+                    console.log(error) ;
+                });
+
+
+
+            }
+
+            if(document.getElementById("area").selectedIndex ==1) {
+                db.collection("Delivery").where("area2","==",true).get().then(function (snapshot) {
+                    snapshot.forEach(function (doc) {
+                        persons.push(doc.id) ;
+                    })
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+            if(document.getElementById("area").selectedIndex == 2) {
+                db.collection("Delivery").where("area3","==",true).get().then(function (snapshot) {
+                    snapshot.forEach(function (doc) {
+                        persons.push(doc.id) ;
+                    })
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+            console.log(persons.length) ;
+            console.log(persons) ;
+            return persons ;
+        }*/
 
         function placeOrder() {
-            let id = auth.currentUser.uid;
+            var Dperson = persons[Math.floor(Math.random() * persons.length)];
+
+            let id = localStorage.getItem("current_user");
+
             if (id == null) {
                 alert("not logged in ");
             }
@@ -54,35 +212,6 @@
                 var address = document.forms["confirm"]["email"].value;
                 var name = document.forms["confirm"]["name"].value;
 
-                if(document.getElementById("area").selectedIndex ==0) {
-                    db.collection("Delivery").where("area1","==",true).get().then(function (snapshot) {
-                        snapshot.forEach(function (doc) {
-                            persons.push(doc.id) ;
-                        })
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }
-                if(document.getElementById("area").selectedIndex ==0) {
-                    db.collection("Delivery").where("area2","==",true).get().then(function (snapshot) {
-                        snapshot.forEach(function (doc) {
-                            persons.push(doc.id) ;
-                        })
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }
-                if(document.getElementById("area").selectedIndex == 0) {
-                    db.collection("Delivery").where("area3","==",true).get().then(function (snapshot) {
-                        snapshot.forEach(function (doc) {
-                            persons.push(doc.id) ;
-                        })
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }
-
-                var Dperson = persons[Math.floor(Math.random() * persons.length)];
 
                 var names = [];
                 var prices =  [];
@@ -98,18 +227,89 @@
                     address: address,
                     prices: prices,
                     CustomerName: name,
-                    area: area,
+                    dperson: Dperson,
+                    assigned : true,
                 }).then(function () {
                     alert("order placed") ;
                 })
             }
         }
+
+
     </script>
 </head>
 <body>
 
-<div id="header"></div>
 
+<!-- Header section -->
+<header class="header-section">
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 text-center text-lg-left">
+                    <!-- logo -->
+                    <a href="./index.html" class="site-logo">
+                        <img src="img/logo.png" alt="">
+                    </a>
+                </div>
+                <div class="col-xl-5 col-lg-4">
+                    <form class="header-search-form">
+                        <input type="text" placeholder="Search on divisima ....">
+                        <button><i class="flaticon-search"></i></button>
+                    </form>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="user-panel">
+                        <div class="up-item">
+                            <i class="flaticon-profile"></i>
+                            <a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
+                        </div>
+                        <div class="up-item">
+                            <i class="flaticon-bag"></i>
+                            <a href="cart.html">Shopping Cart</a>
+                        </div>
+                        <div class="up-item">
+                            <a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+                            <a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
+                            <a href="#" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="main-navbar">
+        <div class="container">
+            <!-- menu -->
+            <ul class="main-menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="women.html">Women</a></li>
+                <li><a href="men.html">Men</a></li>
+                <li><a href="shoes.html">Shoes</a>
+                    <ul class="sub-menu">
+                        <li><a href="#">Sneakers</a></li>
+                        <li><a href="#">Sandals</a></li>
+                        <li><a href="#">Formal Shoes</a></li>
+                        <li><a href="#">Boots</a></li>
+                        <li><a href="#">Flip Flops</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Pages</a>
+                    <ul class="sub-menu">
+                        <li><a href="./product.html">Product Page</a></li>
+                        <li><a href="./category.html">Category Page</a></li>
+                        <li><a href="./cart.html">Cart Page</a></li>
+                        <li><a href="./checkout.html">Checkout Page</a></li>
+                        <li><a href="./contact.html">Contact Page</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<br><br>
+<!-- Header section end -->
 <div class="pix_section pix-padding" id="section_forms_2" style="display: block;">
     <div class="container">
         <div class="row">
@@ -167,6 +367,7 @@
                         </div>
                         <button type="button" class="btn btn-primary pix-white btn-md small-text btn-block" onclick="placeOrder()"><span class="pix_edit_text"><strong>Confirm Order</strong></span></button>
                     </form>
+                    <button type="button" class="btn btn-primary pix-white btn-md small-text btn-block" onclick="assign()"><span class="pix_edit_text"><strong>check Order</strong></span></button>
 
                 </div>
             </div>
