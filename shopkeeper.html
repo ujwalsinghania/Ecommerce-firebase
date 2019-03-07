@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="checkAuth.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 
     <!-- Firebase App is always required and must be first -->
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
@@ -47,18 +47,25 @@
         var file ;
         var reader ;
         var fileName;
-
+        var storeName ;
+        var area ;
+        const id = localStorage.getItem("current_user");
 
         function add() {
             var name = document.forms["ADD"]["name"].value;
             var price = document.forms["ADD"]["price"].value;
-            var quantity = document.forms["ADD"]["quant"].value;
+            var quantity = parseInt(document.forms["ADD"]["quant"].value);
             var type = document.forms["ADD"]["type"].value;
             var size = document.forms["ADD"]["size"].value;
             var sex = document.forms["ADD"]["sex"].value;
-            const id = auth.currentUser.uid;
 
-            var quantit = "quantity-"+size ;
+            var quantit = "quantity_"+size ;
+
+            db.collection("stores").doc(id).get()
+                .then(function (doc) {
+                    storeName = doc.data().name ;
+                    area = doc.data().area ;
+                });
 
             db.collection("products")
                 .add({
@@ -68,7 +75,9 @@
                     [quantit]: quantity,
                     fileName: fileName,
                     user: id,
-                    sex: sex
+                    sex: sex,
+                    area: area,
+                    storeName : storeName
                 })
                 .then(function(docRef) {
                     storage.child(docRef.id +'/'+ file.name).put(file);
@@ -100,41 +109,103 @@
             }
         }
 
-        function deletes(){
-            const id = auth.currentUser.uid;
-            var name = document.forms["DELETE"]["del_name"].value ;
-            db.collection("stores").doc(id).collection("products").where("name", "==", name).get()
-                .then(function (snapshot) {
-                    snapshot.docs.forEach(function (doc) {
-                        console.log(doc.id) ;
-                    });
+        var items = [] ;
+        
+       function edit_item(e) {
+
+           var size = prompt("Please enter the size (S, M, L, XL)", "");
+           var quantity = prompt("Please enter the quantity to deduct", "");
+
+           var changeId ;
+           var new_size ;
+           var old_quant;
+
+           e = e || window.event;
+           e = e.target || e.srcElement;
+           if (e.nodeName === 'BUTTON') {
+               changeId = e.id ;
+           }
+
+           if(size == "S"){
+               new_size = "quantity_small" ;
+               db.collection("products").doc(changeId).get().then(function (doc) {
+                   old_quant = doc.data().quantity_small ;
+               });
+           }
+
+           if(size == "M"){
+               new_size = "quantity_medium" ;
+               db.collection("products").doc(changeId).get().then(function (doc) {
+                   old_quant = doc.data().quantity_medium ;
+               });
+           }
+           if(size == "L"){
+               new_size = "quantity_large" ;
+               db.collection("products").doc(changeId).get().then(function (doc) {
+                   n = doc.data().quantity_large ;
+               });
+
+           }
+           if(size == "XL"){
+               new_size = "quantity_XL" ;
+               db.collection("products").doc(changeId).get().then(function (doc) {
+                   old_quant = doc.data().quantity_XL ;
+               });
+           }
+
+           console.log(n) ;
+
+           /*if(new_quant<0){
+               alert("not enough stock")
+           }*/
+           /*else {
+               db.collection("products").doc(changeId).update({
+                   [new_size] : new_quant
+               }).then(function () {
+                   alert("updated");
+               }).catch(function (error) {
+                   alert("error") ;
+               })
+           }*/
+
+       };
+        
+       function allItems(){
+            db.collection("products").where("user","==",id).get().then(function (snapshot) {
+                snapshot.docs.forEach(function(doc) {
+                    var item = {
+                        name: doc.data().name,
+                        price: doc.data().price,
+                        type: doc.data().type,
+                        sex: doc.data().sex,
+                        quantityLarge: doc.data().quantity_large,
+                        quantityMedium: doc.data().quantity_medium,
+                        quantitySmall: doc.data().quantity_small,
+                        itemId: doc.id
+                    };
+                    items.push(item) ;
                 });
-            /*db.collection("stores").doc(id).collection("products").doc()
-                .delete().then(function() {
-                console.log("Document successfully deleted!");
-            }).catch(function(error) {
-                console.error("Error removing document: ", error);
-            });
-            */
-        }
+            }).then(function () {
+                var tables = "<table class='table'>" +
+                    "<thead><tr><th>Name</th><th>Price</th><th>Type</th><th>Sex</th><th>Large Quantity</th><th>Medium Quantity</th><th>Small Quantity</th><th>Edit</th></tr></thead>" +
+                    "<tbody>" ;
 
+                for(var i =0;i<items.length;i++){
+                    console.log(items[i].itemId);
+                    tables = tables + '<tr><td>'+items[i].name+'</td>' + '<td>'+items[i].price+'</td>' + '<td>'+items[i].type+'</td>' + '<td>'+items[i].sex+'</td>'  + '<td>'+items[i].quantityLarge+'</td>' + '<td>'+items[i].quantityMedium+'</td>' + '<td>'+items[i].quantitySmall+'</td>'+
+                    '<td>'+'<button class="btn btn-danger" onclick="edit_item()" id='+ items[i].itemId+ '>Edit</button>'+'</td>'+ '</tr>'
+                }
+                var end = tables + '</tr></tbody></table>' ;
 
-        function search(){
-            var searchText = document.forms["SEARCH"]["search_q"].value ;
-            db.collection("stores").doc(auth.currentUser.uid).collection("products")
-                .orderBy("name").startAt(searchText).get()
-                .then(function (snapshot) {
-                    snapshot.docs.forEach(
-                     function (doc) {
-                         console.log(doc.data().price) ;
-                        }
-                    )
-            });
+                document.getElementById("box").innerHTML = end ;
+            }).catch(function (error) {
+               console.log(error) ;
+           });
 
         }
+
 
         $(document).ready(function () {
-            $("#header").load("header.html");
 
             $("#type").change(function () {
                 var val = $(this).val();
@@ -148,9 +219,15 @@
                 }
             });
         });
+
+        $(function () {
+            $("#header").load("header.html");
+        });
+
     </script>
 
 </head>
+
 <body onload="check()">
 
 <div id="header"></div>
@@ -205,20 +282,12 @@
         <br><br><br><br>
         <div class="form-group">
             <button type="button" class="btn btn-primary" onClick="add()">Add product</button>
+            <button type="button" class="btn btn-primary" onClick="allItems()">Show Products</button>
         </div>
     </form>
 </div>
 
-<div class="container">
-    <h2>Edit Product</h2><br>
-    <form name="SEARCH" method="post">
-        <div class="input-group mb-3">
-            <input type="text" id="search_q" class="form-control" oplaceholder="Search product" aria-label="Search product" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" onclick="search()">Search</button>
-            </div>
-        </div>
-    </form>
+<div class="container" id="box">
 </div>
 
 

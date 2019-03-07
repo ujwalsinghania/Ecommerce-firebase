@@ -39,6 +39,8 @@
             $("#header").load("header.html");
         });
 
+        var persons =[] ;
+
         function placeOrder() {
             let id = auth.currentUser.uid;
             if (id == null) {
@@ -51,6 +53,36 @@
 
                 var address = document.forms["confirm"]["email"].value;
                 var name = document.forms["confirm"]["name"].value;
+
+                if(document.getElementById("area").selectedIndex ==0) {
+                    db.collection("Delivery").where("area1","==",true).get().then(function (snapshot) {
+                        snapshot.forEach(function (doc) {
+                            persons.push(doc.id) ;
+                        })
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                if(document.getElementById("area").selectedIndex ==0) {
+                    db.collection("Delivery").where("area2","==",true).get().then(function (snapshot) {
+                        snapshot.forEach(function (doc) {
+                            persons.push(doc.id) ;
+                        })
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                if(document.getElementById("area").selectedIndex == 0) {
+                    db.collection("Delivery").where("area3","==",true).get().then(function (snapshot) {
+                        snapshot.forEach(function (doc) {
+                            persons.push(doc.id) ;
+                        })
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+
+                var Dperson = persons[Math.floor(Math.random() * persons.length)];
 
                 var names = [];
                 var prices =  [];
@@ -65,7 +97,8 @@
                     products :names,
                     address: address,
                     prices: prices,
-                    name: name
+                    CustomerName: name,
+                    area: area,
                 }).then(function () {
                     alert("order placed") ;
                 })
@@ -119,6 +152,15 @@
                         </div>
                         <div class="form-group">
                             <input type="email" name="email" class="form-control" placeholder="Enter Your Email Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="area">Select Area:</label>
+                            <select class="form-control" id="area" name="area">
+                                <option>Kothrud</option>
+                                <option>Baner</option>
+                                <option>Aundh</option>
+                                <option>Koregaon Park</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <textarea class="form-control" name="address" rows="5" placeholder="Enter your delivery Address"></textarea>

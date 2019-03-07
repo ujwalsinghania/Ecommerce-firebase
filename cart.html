@@ -36,10 +36,11 @@
 	<script>
 		var items = [] ;
 		var total =0;
+
 		$(document).ready(function () {
 			var storedData = localStorage.getItem("cart");
 			console.log(storedData);
-			items =  JSON.parse(storedData);
+			items = JSON.parse(storedData);
 			console.log(items);
 			console.log(items[0]);
 
@@ -161,6 +162,7 @@
 									</td>
 									<td class="total-col"><h4>$45.90</h4></td>
 								</tr>
+
 							</tbody>
 						</table>
 						</div>

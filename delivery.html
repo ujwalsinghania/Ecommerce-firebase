@@ -1,10 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zxx">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="checkAuth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
+            authDomain: "loco-f1182.firebaseapp.com",
+            databaseURL: "https://loco-f1182.firebaseio.com",
+            projectId: "loco-f1182",
+            storageBucket: "loco-f1182.appspot.com",
+            messagingSenderId: "907665553764"
+        };
+
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+        var auth = firebase.auth() ;
+        var storageRef = firebase.storage().ref() ;
+    </script>
+
+
+    <title>Divisima | eCommerce Template</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="description" content=" Divisima | eCommerce Template">
+    <meta name="keywords" content="divisima, eCommerce, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="shortcut icon"/>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/flaticon.css"/>
+    <link rel="stylesheet" href="css/slicknav.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+        $(function () {
+            $("#header").load("header.html");
+        });
+
+        function getOrders(){
+           /* if(document.forms["areas"]["Kothrud"].checked==true) {
+                var kothrud =[] ;
+
+                var area1 = document.forms["areas"]["Kothrud"].value;
+                db.collection("orders").where("area", "==", area1).get()
+                    .then(function (snapshot) {
+                        snapshot.forEach(function (doc) {
+                            kothrud.push(doc.data());
+                        })
+                    }).then(function () {
+                        console.log(kothrud) ;
+                        var template= "";
+                        var prods = "" ;
+                        for(var j=0;j<kothrud.length;j++) {
+                            template = template +
+                                '<h2> Customer Name: '+ kothrud[j].CustomerName+'</h2>'+
+                                   '<h4>Customer Address: '+ kothrud[j].address +'</h4>' ;
+                            for(var k=0;k<kothrud[j].names.length;k++){
+                                    template = template + '<h4>'+kothrud[j].names[k]+'</h4>' ;
+                            }
+                        }
+                        document.getElementById("items").append(template) ;
+                    });
+            }*/
+            if(document.forms["areas"]["area1"].checked==true) {
+                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+                    .update({
+                        area1: true
+                    })
+            }
+            if(document.forms["areas"]["area2"].checked==true) {
+                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+                    .update({
+                        area2: true
+                    })
+            }
+            if(document.forms["areas"]["area3"].checked==true) {
+                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+                    .update({
+                        area3: true
+                    })
+            }
+        }
+
+    </script>
+
 </head>
-<body>
+
+<body onload="check()">
+
+<div id="header"></div>
+
+
+<form name="areas" method="post">
+<div class="form-check">
+    <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" name="Kothrud" value="area1">Kothrud
+    </label>
+</div>
+<div class="form-check">
+    <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" name="Baner" value="area2">Baner
+    </label>
+</div>
+<div class="form-check disabled">
+    <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" name="S.B" value="area3">S.B Road
+    </label>
+</div>
+    <button type="button" class="btn btn-primary" onClick="getOrders()">Submit</button>
+
+</form>
+
+<div id="items"></div>
+
 
 </body>
 </html>

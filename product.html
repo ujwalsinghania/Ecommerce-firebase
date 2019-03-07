@@ -58,6 +58,8 @@
 		var price ;
 		var urls ;
 		var type ;
+		var storeName ;
+		var area ;
 
 		$(document).ready(function () {
 			$("#header").load("header.html");
@@ -67,13 +69,15 @@
                 document.getElementById("price").innerHTML = '&#8377;'+ doc.data().price;
 				price = doc.data().price ;
                 type = doc.data().type ;
+                area = doc.data().area ;
+				storeName = doc.data().storeName ;
 				storage.ref().child(doc.id+'/'+doc.data().fileName)
                     .getDownloadURL().then(function (url) {
                         document.getElementById("prd_image").src = url.toString() ;
             			urls = url.toString() ;
                     })
             });
-			
+
 		});
 
 		function setCookie() {
@@ -85,10 +89,9 @@
 					ArrayData = JSON.parse(storedData);
 					console.log(ArrayData);
 				}
-				ArrayData.push({id: id , name: name, price: price, url: urls});
+				ArrayData.push({id: id , name: name, price: price, url: urls, area: area, storeName: storeName});
 				localStorage.setItem("cart", JSON.stringify(ArrayData));
 				alert("item added to cart");
-
 		}
 
 
@@ -195,7 +198,7 @@
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="product-pic-zoom">
-						<img class="product-big-img" id="prd_image" src="img/single-product/1.jpg" alt="">
+						<img class="product-big-img" id="prd_image" src="" alt="">
 					</div>
 					<!--<div class="product-thumbs" tabindex="1" style="overflow: hidden; outline: none;">
 						<div class="product-thumbs-track">
@@ -224,7 +227,7 @@
 						<p>Size</p>
 						<div class="sc-item">
 							<input type="radio" name="sc" id="xs-size">
-							<label for="xs-size">32</label>
+							<label for="xs-size" id="s">32</label>
 						</div>
 						<div class="sc-item">
 							<input type="radio" name="sc" id="s-size">

@@ -101,19 +101,100 @@
                         console.error("Error adding document: ", error);
                     });
             }
+            if(role=="Delivery") {
+                db.collection("Delivery").doc(id).set({
+                    area: area,
+                    role: role,
+                    area2: false,
+                    area3: false
+                }).then(function () {
+                    window.location.replace("index.html");
+
+                }).then(function (docRef) {
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                    .catch(function (error) {
+                        console.error("Error adding document: ", error);
+                    });
+            }
         }) ;
 
     }
 
-    $(function () {
-        $("#header").load("header.html");
-    })
 </script>
 
 </head>
 <body>
 
-<div id="header"></div>
+<!-- Header section -->
+<header class="header-section">
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 text-center text-lg-left">
+                    <!-- logo -->
+                    <a href="./index.html" class="site-logo">
+                        <img src="img/logo.png" alt="">
+                    </a>
+                </div>
+                <div class="col-xl-5 col-lg-4">
+                    <form class="header-search-form">
+                        <input type="text" placeholder="Search on divisima ....">
+                        <button><i class="flaticon-search"></i></button>
+                    </form>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="user-panel">
+                        <div class="up-item">
+                            <i class="flaticon-profile"></i>
+                            <a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
+                        </div>
+                        <div class="up-item">
+                            <i class="flaticon-bag"></i>
+                            <a href="cart.html">Shopping Cart</a>
+                        </div>
+                        <div class="up-item">
+                            <a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+                            <a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
+                            <a href="#" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="main-navbar">
+        <div class="container">
+            <!-- menu -->
+            <ul class="main-menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="women.html">Women</a></li>
+                <li><a href="men.html">Men</a></li>
+                <li><a href="shoes.html">Shoes</a>
+                    <ul class="sub-menu">
+                        <li><a href="#">Sneakers</a></li>
+                        <li><a href="#">Sandals</a></li>
+                        <li><a href="#">Formal Shoes</a></li>
+                        <li><a href="#">Boots</a></li>
+                        <li><a href="#">Flip Flops</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Pages</a>
+                    <ul class="sub-menu">
+                        <li><a href="./product.html">Product Page</a></li>
+                        <li><a href="./category.html">Category Page</a></li>
+                        <li><a href="./cart.html">Cart Page</a></li>
+                        <li><a href="./checkout.html">Checkout Page</a></li>
+                        <li><a href="./contact.html">Contact Page</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<br><br>
+<!-- Header section end -->
 
 <div class="container">
    <br><br>
