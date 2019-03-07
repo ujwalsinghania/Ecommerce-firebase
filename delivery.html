@@ -146,9 +146,7 @@
                     });
             }*/
 
-            allItems = [];
 
-            var id = localStorage.getItem("current_user");
 
             if(document.getElementById("area1").checked) {
                    db.collection("Delivery").doc(localStorage.getItem("current_user"))
@@ -173,16 +171,31 @@
 
 
        function getOrders(){
-           db.collection("orders").where("dperson","==",id).get()
+           var allItems =[] ;
+           var a = localStorage.getItem("current_user");
+           console.log(a);
+           db.collection("orders").where("dperson","==",a).get()
                .then(function (querySnapshot) {
                    querySnapshot.forEach(function(doc) {
-                        allItems()
-                   });
-               }).catch(function(error) {
-               console.log("Error getting documents: ", error);
+                        allItems.push(doc.data());
+                   })
+               }).then(function () {
+               var template= "";
+               for(var j=0;j<kothrud.length;j++) {
+                   template = template +
+                       '<h2> Customer Name: '+ kothrud[j].CustomerName+'</h2>'+
+                       '<h4>Customer Address: '+ kothrud[j].address +'</h4>' ;
+                   for(var k=0;k<kothrud[j].names.length;k++){
+                       template = template + '<h4>'+kothrud[j].names[k]+'</h4>' ;
+                   }
+               }
+               document.getElementById("items").append(template) ;
+           }).catch(function (error) {
+                console.log(error) ;
            });
-        }
 
+
+        }
 
     </script>
 

@@ -110,15 +110,16 @@
         }
 
         var items = [] ;
-        
-       function edit_item(e) {
+
+        var changes= [] ;
+
+        function edit_item(e) {
 
            var size = prompt("Please enter the size (S, M, L, XL)", "");
            var quantity = prompt("Please enter the quantity to deduct", "");
 
            var changeId ;
            var new_size ;
-           var old_quant;
 
            e = e || window.event;
            e = e.target || e.srcElement;
@@ -126,50 +127,81 @@
                changeId = e.id ;
            }
 
-           if(size == "S"){
-               new_size = "quantity_small" ;
-               db.collection("products").doc(changeId).get().then(function (doc) {
-                   old_quant = doc.data().quantity_small ;
-               });
-           }
+            if(size == "S"){
+                var q  ;
+                new_size = "quantity_small" ;
+                db.collection("products").doc(changeId).get()
+                    .then(function (doc) {
+                        q = doc.data().quantity_small ;
+                    }).then(function () {
+                        var abc = q - quantity ;
+                        if(abc<0){
+                            alert("not enough stock");
+                        }
+                    else{
+                        db.collection("products").doc(changeId).update({
+                            [new_size]: abc
+                            })
+                        }
+                }).catch(function (error) {
+                    console.log(error);
+                })
+            }
 
-           if(size == "M"){
-               new_size = "quantity_medium" ;
-               db.collection("products").doc(changeId).get().then(function (doc) {
-                   old_quant = doc.data().quantity_medium ;
-               });
-           }
+            if(size == "M"){
+                var q  ;
+                new_size = "quantity_medium" ;
+                db.collection("products").doc(changeId).get()
+                    .then(function (doc) {
+                        q = doc.data().quantity_medium ;
+                    }).then(function () {
+                    var abc = q - quantity ;
+                    db.collection("products").doc(changeId).update({
+                        [new_size]: abc
+                    })
+                }).catch(function (error) {
+                    console.log(error);
+                })
+            }
            if(size == "L"){
+               var q  ;
                new_size = "quantity_large" ;
-               db.collection("products").doc(changeId).get().then(function (doc) {
-                   n = doc.data().quantity_large ;
-               });
-
-           }
-           if(size == "XL"){
-               new_size = "quantity_XL" ;
-               db.collection("products").doc(changeId).get().then(function (doc) {
-                   old_quant = doc.data().quantity_XL ;
-               });
-           }
-
-           console.log(n) ;
-
-           /*if(new_quant<0){
-               alert("not enough stock")
-           }*/
-           /*else {
-               db.collection("products").doc(changeId).update({
-                   [new_size] : new_quant
+               db.collection("products").doc(changeId).get()
+                   .then(function (doc) {
+                        q = doc.data().quantity_large ;
                }).then(function () {
-                   alert("updated");
-               }).catch(function (error) {
-                   alert("error") ;
+                   var abc = q - quantity ;
+                   if(abc<0){
+                       alert("not enough stock");
+                   }
+                   else{
+                       db.collection("products").doc(changeId).update({
+                           [new_size]: abc
+                       });
+                        alert("stock updated") ;
+                   }
+                }).catch(function (error) {
+                   console.log(error);
                })
-           }*/
+           }
 
+            if(size == "XL"){
+                var q  ;
+                new_size = "quantity_XL" ;
+                db.collection("products").doc(changeId).get()
+                    .then(function (doc) {
+                        q = doc.data().quantity_XL ;
+                    }).then(function () {
+                    var abc = q - quantity ;
+                    db.collection("products").doc(changeId).update({
+                        [new_size]: abc
+                    })
+                }).catch(function (error) {
+                    console.log(error);
+                })
+            }
        };
-        
+
        function allItems(){
             db.collection("products").where("user","==",id).get().then(function (snapshot) {
                 snapshot.docs.forEach(function(doc) {
@@ -286,6 +318,7 @@
         </div>
     </form>
 </div>
+
 
 <div class="container" id="box">
 </div>
