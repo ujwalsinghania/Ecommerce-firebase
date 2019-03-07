@@ -131,25 +131,15 @@
 			console.log(items);
 			console.log(items[0]);
 
-			for(
-				var i=0;i<items.length;i++){
+			for(var i=0;i<items.length;i++){
 					total = total + parseInt(items[i].price) ;
-					$('#table_ins').append(
-							'<tr>',
-								'<td class="product-col">',
-									'<img width="73px" height="72px" src='+'"'+items[i].url +'"'+'>',
-										'<div class="pc-title">',
-											'<h4>'+items[i].name+'</h4>',
-											'<p>&#8377; '+items[i].price+'</p>',
-										'</div>',
-								'</td>',
-								'<td class="total-col"><h4>&#8377; '+items[i].price+'</h4></td>',
-							'</tr>'
-					) ;
+					$("#table_ins").append(
+					'<tr><td class="product-col"><img src='+ '"' + items[i].url  + '"' + '><div class="pc-title"> ' +
+							'<h4>'+ items[i].name +'</h4></div></td>' + '<td class="total-col"><h4>'+ "&#8377;"+items[i].price+'</h4></td></tr>'
+					)
 			}
 					document.getElementById("total").innerText = total
 		});
-
 
 		function clears() {
 			alert("cart cleared");
@@ -265,13 +255,13 @@
 							<table>
 							<thead>
 								<tr>
-									<th class="product-th">Product</th>
-									<th class="total-th">Price</th>
+									<th class="product-th" style="font-weight: 600; font-size: 19px">Product</th>
+									<th class="product-th" style="font-weight: 600; font-size: 19px; padding-left: 90px">Price</th>
 								</tr>
 							</thead>
 							<tbody id ="table_ins">
 								<!--table insert-->
-								<tr>
+								<!-- <tr>
 									<td class="product-col">
 										<img src="img/cart/1.jpg" alt="">
 										<div class="pc-title">
@@ -298,7 +288,7 @@
 										</div>
 									</td>
 									<td class="total-col"><h4>$45.90</h4></td>
-								</tr>
+								</tr> -->
 
 							</tbody>
 						</table>
