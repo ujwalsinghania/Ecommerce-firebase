@@ -212,7 +212,6 @@
                 var address = document.forms["confirm"]["email"].value;
                 var name = document.forms["confirm"]["name"].value;
 
-
                 var names = [];
                 var prices =  [];
 
@@ -221,6 +220,10 @@
                     prices.push(items[i].price) ;
                 }
 
+                if(Dperson == undefined){
+                    alert("order could not be placed") ;
+                }
+                else{
                 db.collection("orders").add({
                     user: id,
                     products :names,
@@ -231,8 +234,10 @@
                     assigned : true,
                 }).then(function () {
                     alert("order placed") ;
-                })
-            }
+                    window.location.replace("index.html") ;
+                }) ;
+                    }
+                }
         }
 
 
@@ -360,7 +365,6 @@
                                 <option>Kothrud</option>
                                 <option>Baner</option>
                                 <option>Aundh</option>
-                                <option>Koregaon Park</option>
                             </select>
                         </div>
                         <div class="form-group">

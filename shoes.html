@@ -55,6 +55,76 @@
 	<![endif]-->
 
 	<script>
+
+		function shopkeeper() {
+			$("#shop_button").css('visibility', 'visible')
+					.click( function () {
+						window.location.replace("shopkeeper.html") ;
+					})
+		}
+
+		function customer() {
+			$("#cust_button").css('visibility', 'visible')
+					.click(function () {
+						window.location.replace("customer.html") ;
+					})
+		}
+
+		function delivery(){
+			$("#delivery_button").css('visibility', 'visible')
+					.click(function () {
+						window.location.replace("delivery.html") ;
+					})
+		}
+
+		function check(){
+			auth.onAuthStateChanged(function (user){
+				if(user) {
+					const id = user.uid;
+
+					localStorage.setItem("current_user", id);
+
+					var role = localStorage.getItem("role");
+					if (role == "Shopkeeper") {
+						db.collection("stores").doc(id).get().then(function (doc) {
+							if ((doc.data().role) == "Shopkeeper") {
+								shopkeeper();
+							}
+						});
+					}
+					if (role == "Delivery") {
+						db.collection("Delivery").doc(id).get().then(function (doc) {
+							if ((doc.data().role) == "Delivery") {
+								delivery();
+							}
+						});
+					}
+					if (role == "Customer") {
+						db.collection("Customer").doc(id).get().then(function (doc) {
+							if ((doc.data().role) == "Customer") {
+								customer();
+							}
+						});
+					}
+
+
+					$("#login").css('visibility', 'hidden');
+					$("#logout").css('visibility', 'visible').click(function () {
+						auth.signOut().then(function () {
+							// Sign-out successful.
+						}).catch(function (error) {
+							alert(error);
+						});
+					});
+				}
+				else{
+					console.log("no user") ;
+				}
+			});
+		}
+	</script>
+
+	<script>
         function changes(id){
         	//alert("id" +id) ;
             localStorage.setItem("id",id) ;
@@ -70,7 +140,7 @@
 							'<img width = "330px" height= "411px" src=' + cardData.image+'>',
 						'</div>',
 					'<div class="pi-text">',
-						'<h6>'+cardData.price +'</h6>',
+						'<h6>&#8377;'+cardData.price +'</h6>',
 							'<a href="#" onclick="changes('+"'"+cardData.id+"'"+')">'+cardData.Name+'</a>',
 						'</div>',
 					'</div>',
@@ -125,21 +195,85 @@
 			$('#products').append(cards) ;
 		}
 
-		$(function () {
-            $("#header").load("header.html");
-        })
-
 	</script>
 
 
 </head>
-<body>
+<body onload="check()">
 	<!-- Page Preloder -->
 	<div id="preloder">
 		<div class="loader"></div>
 	</div>
 
-    <div id="header"></div>
+	<!-- Header section -->
+	<header class="header-section">
+		<div class="header-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-2 text-center text-lg-left">
+						<!-- logo -->
+						<a href="./index.html" class="site-logo">
+							<img src="img/logo.png" alt="">
+						</a>
+					</div>
+					<div class="col-xl-5 col-lg-4">
+						<form class="header-search-form">
+							<input type="text" placeholder="Search on divisima ....">
+							<button><i class="flaticon-search"></i></button>
+						</form>
+					</div>
+					<div class="col-xl-5 col-lg-6">
+						<div class="user-panel">
+							<div class="up-item">
+								<i class="flaticon-profile"></i>
+								<a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html" id="create">Create Account</a>
+							</div>
+							<div class="up-item">
+								<i class="flaticon-bag"></i>
+								<a href="cart.html">Shopping Cart</a>
+							</div>
+							<div class="up-item">
+								<a href="customer.html" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+								<a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
+								<a href="delivery.html" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav class="main-navbar">
+			<div class="container">
+				<!-- menu -->
+				<ul class="main-menu">
+					<li><a href="#">Home</a></li>
+					<li><a href="women.html">Women</a></li>
+					<li><a href="men.html">Men</a></li>
+					<li><a href="shoes.html">Shoes</a>
+						<ul class="sub-menu">
+							<li><a href="#">Sneakers</a></li>
+							<li><a href="#">Sandals</a></li>
+							<li><a href="#">Formal Shoes</a></li>
+							<li><a href="#">Boots</a></li>
+							<li><a href="#">Flip Flops</a></li>
+						</ul>
+					</li>
+					<!--<li><a href="#">Pages</a>
+                        <ul class="sub-menu">
+                            <li><a href="./product.html">Product Page</a></li>
+                            <li><a href="./category.html">Category Page</a></li>
+                            <li><a href="./cart.html">Cart Page</a></li>
+                            <li><a href="./checkout.html">Checkout Page</a></li>
+                            <li><a href="./contact.html">Contact Page</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Blog</a></li> -->
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<br><br>
+	<!-- Header section end -->
 
 	<!-- Page info -->
 	<div class="page-top-info">
@@ -198,18 +332,14 @@
 							<div class="range-slider">
                                 <div class="price-input">
                                     <input type="text" id="minamount">
-                                    <input type="text" id="maxamount">
+                                    <input type="text" id="maxamount"><br><br>
                                 </div>
                             </div>
-                        </div>
+						</div>
 					</div>
 					<div class="filter-widget mb-0">
 						<h2 class="fw-title">Size</h2>
 						<div class="fw-size-choose">
-							<div class="sc-item">
-								<input type="radio" name="sc" id="xs-size">
-								<label for="xs-size">XS</label>
-							</div>
 							<div class="sc-item">
 								<input type="radio" name="sc" id="s-size">
 								<label for="s-size">S</label>
@@ -225,10 +355,6 @@
 							<div class="sc-item">
 								<input type="radio" name="sc" id="xl-size">
 								<label for="xl-size">XL</label>
-							</div>
-							<div class="sc-item">
-								<input type="radio" name="sc" id="xxl-size">
-								<label for="xxl-size">XXL</label>
 							</div>
 						</div>
 					</div>

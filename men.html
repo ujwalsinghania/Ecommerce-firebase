@@ -6,8 +6,6 @@
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
 
-	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
-
 	<script>
 		var config = {
 			apiKey: "AIzaSyDft5jJVpS3OYjtAe2jXqb8tdx2OAjl9uY",
@@ -21,11 +19,10 @@
 		firebase.initializeApp(config);
 		var db = firebase.firestore();
 		var auth = firebase.auth() ;
-		var storageRef = firebase.storage().ref() ;
+
 	</script>
 
-
-	<title>Divisima | eCommerce Template</title>
+	<title>Loco | eCommerce Template</title>
 	<meta charset="UTF-8">
 	<meta name="description" content=" Divisima | eCommerce Template">
 	<meta name="keywords" content="divisima, eCommerce, creative, html">
@@ -49,8 +46,8 @@
 
 
 	<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
 	<script>
@@ -80,6 +77,9 @@
 			auth.onAuthStateChanged(function (user){
 				if(user) {
 					const id = user.uid;
+
+					localStorage.setItem("current_user", id);
+
 					var role = localStorage.getItem("role");
 					if (role == "Shopkeeper") {
 						db.collection("stores").doc(id).get().then(function (doc) {
@@ -89,7 +89,7 @@
 						});
 					}
 					if (role == "Delivery") {
-						db.collection("delivery").doc(id).get().then(function (doc) {
+						db.collection("Delivery").doc(id).get().then(function (doc) {
 							if ((doc.data().role) == "Delivery") {
 								delivery();
 							}
@@ -105,6 +105,7 @@
 
 
 					$("#login").css('visibility', 'hidden');
+					$("#create").css('visibility', 'hidden') ;
 					$("#logout").css('visibility', 'visible').click(function () {
 						auth.signOut().then(function () {
 							// Sign-out successful.
@@ -114,12 +115,10 @@
 					});
 				}
 				else{
-					//window.location.replace("SignUp.html");
 					console.log("no user") ;
 				}
 			});
 		}
-
 	</script>
 
 	<script>
@@ -232,7 +231,7 @@
 						<div class="user-panel">
 							<div class="up-item">
 								<i class="flaticon-profile"></i>
-								<a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
+								<a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html" id="create">Create Account</a>
 							</div>
 							<div class="up-item">
 								<i class="flaticon-bag"></i>

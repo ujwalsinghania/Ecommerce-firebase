@@ -199,6 +199,24 @@
             }
         }
 
+        var changeId ;
+
+        function delivered(e) {
+            console.log(e) ;
+            e = e || window.event;
+            e = e.target || e.srcElement;
+            if (e.nodeName === 'BUTTON') {
+                changeId = e.id ; //a deafault javascript function to get button id
+            }
+
+            db.collection("orders").doc(changeId).update({
+                delivered : true
+            }).then(function () {
+                alert("item delivered") ;
+                document.getElementById(changeId).disabled = true;
+            })
+        }
+
 
        function getOrders(){
            var allItems =[] ;
@@ -207,20 +225,28 @@
            db.collection("orders").where("dperson","==",a).get()
                .then(function (querySnapshot) {
                    querySnapshot.forEach(function(doc) {
-                        allItems.push(doc.data());
+                       var order = {
+                            id : doc.id,
+                            products: doc.data().products,
+                            prices : doc.data().prices,
+                            CustomerName : doc.data().CustomerName,
+                            address : doc.data().address
+                       } ;
+                       allItems.push(order);
                    })
                }).then(function () {
                    console.log(allItems) ;
 
-                   var template= '<table class="table"><thead><tr><th>Customer Name</th><th>Address</th><th>Item</th><th>Delivery</th></tr><tbody>';
+                   var template= '<table class="table"><thead><tr><th>Order id</th><th>Customer Name</th><th>Address</th><th>Item</th><th>Delivery</th></tr><tbody>';
                     for(var j=0;j<allItems.length;j++) {
                        template = template +
-                           '<tr><td>'+ allItems[j].CustomerName+'</td>'+ '<td>'+allItems[j].address +'</td>' ;
+                           '<tr>' + '<td>'+allItems[j].id+'</td>' +
+                           '<td>'+ allItems[j].CustomerName+'</td>'+ '<td>'+allItems[j].address +'</td>' ;
 
                        for(var k=0;k<allItems[j].products.length;k++){
                         template = template + '<td>'+allItems[j].products[k]+'</td>' ;
                     }
-                        template = template + '<td><button class="btn btn-success" onclick="">Delivered?</button></td></tr>'
+                        template = template + '<td><button class="btn btn-danger" onClick="delivered()"'+ ' id='+ allItems[j].id +'>Deliver</button></td></tr>'
 
                     }
                 var end = template + '</tbody></table>' ;
