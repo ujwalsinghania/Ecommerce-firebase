@@ -145,7 +145,7 @@
 			alert("cart cleared");
 			localStorage.getItem("cart");
 			localStorage.removeItem("cart");
-			var arr=JSON.stringify([]);
+			var arr=JSON.stringify([]);  //recreating cart array in local stoirage cuz i always need one !!!!
 			localStorage.setItem("cart", arr) ;
 			window.location.replace("cart.html") ;
 		}

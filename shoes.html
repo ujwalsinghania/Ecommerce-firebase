@@ -68,9 +68,6 @@
 					'<div class="card" style="border: 0; height: 399px">',
 						'<div class="pi-pic">',
 							'<img width = "330px" height= "411px" src=' + cardData.image+'>',
-								'<div class="pi-links">',
-									'<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>',
-								'</div>',
 						'</div>',
 					'<div class="pi-text">',
 						'<h6>'+cardData.price +'</h6>',
@@ -86,15 +83,13 @@
 		}
 
 		var data = [
-			{ "id":1, "Name": "harshiv", "price": "$90900", "image": "img/product/5.jpg" },
-			{ "Name": "mahima", "price": "$90900", "image": "img/product/5.jpg" },
-			{ "Name": "Peter", "price": "$90900", "image": "img/product/5.jpg" },
+
 		];
 
 		$(document).ready(
 		    function fetch() {
 			var test ;
-			db.collection('products').where("type","==","shoes").get().then(function (snapshot) {
+			db.collection('products').where("type","==","shoes").get().then(function (snapshot) { // type= shoes
 				snapshot.docs.forEach(function (doc) {
 					storageRef.child(doc.id+'/'+doc.data().fileName)
 							.getDownloadURL()

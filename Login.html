@@ -129,7 +129,7 @@
             var password = document.forms["login"]["pswd"].value;
             var role= document.forms["login"]["role"].value;
 
-            localStorage.setItem("role", role);
+            localStorage.setItem("role", role);  /* stroing role in local storage */
 
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .catch(function (error) {

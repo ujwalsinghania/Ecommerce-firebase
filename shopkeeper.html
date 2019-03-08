@@ -90,7 +90,7 @@
                 });
         }
 
-        function previewFile() {
+        function previewFile() { //function for displaying the image file to the user
             reader = new FileReader();
             file = document.querySelector('input[type=file]').files[0];
             fileName= file.name ;
@@ -124,7 +124,7 @@
            e = e || window.event;
            e = e.target || e.srcElement;
            if (e.nodeName === 'BUTTON') {
-               changeId = e.id ;
+               changeId = e.id ; //a deafault javascript function to get button id
            }
 
             if(size == "S"){
@@ -202,7 +202,7 @@
             }
        };
 
-       function allItems(){
+       function allItems(){ // to make it easier to loop through the array and put it in a template of a row, we are using arrays
             db.collection("products").where("user","==",id).get().then(function (snapshot) {
                 snapshot.docs.forEach(function(doc) {
                     var item = {
@@ -220,16 +220,16 @@
             }).then(function () {
                 var tables = "<table class='table'>" +
                     "<thead><tr><th>Name</th><th>Price</th><th>Type</th><th>Sex</th><th>Large Quantity</th><th>Medium Quantity</th><th>Small Quantity</th><th>Edit</th></tr></thead>" +
-                    "<tbody>" ;
+                    "<tbody>" ; //headers
 
-                for(var i =0;i<items.length;i++){
+                for(var i =0;i<items.length;i++){ // display items from the array into a table
                     console.log(items[i].itemId);
                     tables = tables + '<tr><td>'+items[i].name+'</td>' + '<td>'+items[i].price+'</td>' + '<td>'+items[i].type+'</td>' + '<td>'+items[i].sex+'</td>'  + '<td>'+items[i].quantityLarge+'</td>' + '<td>'+items[i].quantityMedium+'</td>' + '<td>'+items[i].quantitySmall+'</td>'+
                     '<td>'+'<button class="btn btn-danger" onclick="edit_item()" id='+ items[i].itemId+ '>Edit</button>'+'</td>'+ '</tr>'
-                }
-                var end = tables + '</tr></tbody></table>' ;
+                }//fetching from array and putting into table
+                var end = tables + '</tr></tbody></table>' ;// closing table variable
 
-                document.getElementById("box").innerHTML = end ;
+                document.getElementById("box").innerHTML = end ; //displaying variable (products)
             }).catch(function (error) {
                console.log(error) ;
            });
@@ -314,7 +314,7 @@
         <br><br><br><br>
         <div class="form-group">
             <button type="button" class="btn btn-primary" onClick="add()">Add product</button>
-            <button type="button" class="btn btn-primary" onClick="allItems()">Show Products</button>
+            <button type="button" class="btn btn-primary" onClick="allItems()">All Items</button>
         </div>
     </form>
 </div>

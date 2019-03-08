@@ -152,20 +152,50 @@
                    db.collection("Delivery").doc(localStorage.getItem("current_user"))
                     .update({
                         area1: true
-                    });
+                    }).then(function () {
+                       alert("updated") ;
+                   });
 
+            }
+            else{
+                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+                    .update({
+                        area1: false
+                    }).then(function () {
+                    alert("updated") ;
+                });
             }
             if(document.getElementById("area2").checked) {
                 db.collection("Delivery").doc(localStorage.getItem("current_user"))
                     .update({
                         area2: true
-                    })
+                    }).then(function () {
+                    alert("updated") ;
+                });
+            }
+            else{
+                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+                    .update({
+                        area2: false
+                    }).then(function () {
+                    alert("updated") ;
+                });
             }
             if(document.getElementById("area3").checked) {
                 db.collection("Delivery").doc(localStorage.getItem("current_user"))
                     .update({
                         area3: true
-                    })
+                    }).then(function () {
+                    alert("updated") ;
+                });
+            }
+            else{
+                db.collection("Delivery").doc(localStorage.getItem("current_user"))
+                    .update({
+                        area3: false
+                    }).then(function () {
+                    alert("updated") ;
+                });
             }
         }
 
@@ -180,20 +210,20 @@
                         allItems.push(doc.data());
                    })
                }).then(function () {
-               var template= "";
-               for(var j=0;j<kothrud.length;j++) {
+                   console.log(allItems) ;
+               var template= "<h2>"+ allItems[0].CustomerName+"</h2>";
+               for(var j=0;j<allItems.length;j++) {
                    template = template +
-                       '<h2> Customer Name: '+ kothrud[j].CustomerName+'</h2>'+
-                       '<h4>Customer Address: '+ kothrud[j].address +'</h4>' ;
-                   for(var k=0;k<kothrud[j].names.length;k++){
-                       template = template + '<h4>'+kothrud[j].names[k]+'</h4>' ;
+                       '<h2> Customer Name: '+ allItems[j].CustomerName+'</h2>'+
+                       '<h4>Customer Address: '+ allItems[j].address +'</h4>' ;
+                   for(var k=0;k<allItems[j].products.length;k++){
+                       template = template + '<h4>'+allItems[j].products[k]+'</h4>' ;
                    }
                }
-               document.getElementById("items").append(template) ;
+               document.getElementById("items").innerHTML= template ;
            }).catch(function (error) {
                 console.log(error) ;
            });
-
 
         }
 

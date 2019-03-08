@@ -197,7 +197,7 @@
         }*/
 
         function placeOrder() {
-            var Dperson = persons[Math.floor(Math.random() * persons.length)];
+            var Dperson = persons[Math.floor(Math.random() * persons.length)]; // random assignment from array
 
             let id = localStorage.getItem("current_user");
 
@@ -351,7 +351,8 @@
                             <input type="text" name="name" class="form-control" placeholder="Enter Your Full Name">
                         </div>
                         <div class="form-group">
-                            <input type="email" name="email" class="form-control" placeholder="Enter Your Email Address">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
                         </div>
                         <div class="form-group">
                             <label for="area">Select Area:</label>

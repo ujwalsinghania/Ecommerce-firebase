@@ -93,7 +93,7 @@
 		    function fetch() {
 			var test ;
 			db.collection('products').where("sex","==","Male").get().then(function (snapshot) {
-				snapshot.docs.forEach(function (doc) {
+				snapshot.docs.forEach(function (doc) { //type == male
 					storageRef.child(doc.id+'/'+doc.data().fileName)
 							.getDownloadURL()
 							.then(function(url) {

@@ -23,7 +23,7 @@
 
 	</script>
 
-	<title>Divisima | eCommerce Template</title>
+	<title>Loco</title>
 	<meta charset="UTF-8">
 	<meta name="description" content=" Divisima | eCommerce Template">
 	<meta name="keywords" content="divisima, eCommerce, creative, html">
@@ -51,13 +51,16 @@
 	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<script>
 
+    <!--check function for each user-->
+
+	<script>
 		function shopkeeper() {
 			$("#shop_button").css('visibility', 'visible')
 					.click( function () {
 						window.location.replace("shopkeeper.html") ;
 			})
+            // this activates the shopkeeper button and redirects to his page
 		}
 
 		function customer() {
@@ -82,7 +85,7 @@
 					if (role == "Shopkeeper") {
 						db.collection("stores").doc(id).get().then(function (doc) {
 							if ((doc.data().role) == "Shopkeeper") {
-								shopkeeper();
+								shopkeeper();  <!--checking role of user-->
 							}
 						});
 					}
@@ -134,7 +137,7 @@
 					<div class="col-lg-2 text-center text-lg-left">
 						<!-- logo -->
 						<a href="./index.html" class="site-logo">
-							<img src="img/logo.png" alt="">
+                            <h3 style="padding-top: 10px">LOCO</h3>
 						</a>
 					</div>
 					<div class="col-xl-5 col-lg-4">

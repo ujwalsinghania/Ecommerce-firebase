@@ -81,7 +81,6 @@
 		});
 
 		function setCookie() {
-
 				var ArrayData = [];
 				var storedData = localStorage.getItem("cart");
 
@@ -89,6 +88,7 @@
 					ArrayData = JSON.parse(storedData);
 					console.log(ArrayData);
 				}
+
 				ArrayData.push({id: id , name: name, price: price, url: urls, area: area, storeName: storeName});
 				localStorage.setItem("cart", JSON.stringify(ArrayData));
 				alert("item added to cart");
