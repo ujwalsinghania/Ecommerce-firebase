@@ -5,6 +5,7 @@
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-storage.js"></script>
 
 	<script>
 		var config = {
@@ -19,6 +20,8 @@
 		firebase.initializeApp(config);
 		var db = firebase.firestore();
 		var auth = firebase.auth() ;
+		var storageRef = firebase.storage().ref() ;
+
 
 	</script>
 
@@ -136,9 +139,7 @@
 					'<div class="card" style="border: 0; height: 399px" padd>',
 						'<div class="pi-pic">',
 							'<img width = "330px" height= "411px" src=' + cardData.image+'>',
-								'<div class="pi-links">',
-									'<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>',
-								'</div>',
+
 						'</div>',
 					'<div class="pi-text">',
 						'<h6>'+cardData.price +'</h6>',
@@ -218,7 +219,7 @@
 					<div class="col-lg-2 text-center text-lg-left">
 						<!-- logo -->
 						<a href="./index.html" class="site-logo">
-							<img src="img/logo.png" alt="">
+							<h3 style="padding-top: 10px">LOCO</h3>
 						</a>
 					</div>
 					<div class="col-xl-5 col-lg-4">
@@ -231,14 +232,16 @@
 						<div class="user-panel">
 							<div class="up-item">
 								<i class="flaticon-profile"></i>
-								<a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html" id="create">Create Account</a>
+								<a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
 							</div>
 							<div class="up-item">
-								<i class="flaticon-bag"></i>
-								<a href="cart.html">Shopping Cart</a>
+								<div class="shopping-card">
+									<i class="flaticon-bag"></i>
+								</div>
+								<a href="#">Shopping Cart</a>
 							</div>
 							<div class="up-item">
-								<a href="customer.html" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+								<a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
 								<a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
 								<a href="delivery.html" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
 							</div>
@@ -255,13 +258,6 @@
 					<li><a href="women.html">Women</a></li>
 					<li><a href="men.html">Men</a></li>
 					<li><a href="shoes.html">Shoes</a>
-						<ul class="sub-menu">
-							<li><a href="#">Sneakers</a></li>
-							<li><a href="#">Sandals</a></li>
-							<li><a href="#">Formal Shoes</a></li>
-							<li><a href="#">Boots</a></li>
-							<li><a href="#">Flip Flops</a></li>
-						</ul>
 					</li>
 					<!--<li><a href="#">Pages</a>
                         <ul class="sub-menu">
@@ -276,8 +272,7 @@
 				</ul>
 			</div>
 		</nav>
-	</header>
-	<br><br>
+	</header><br><br>
 	<!-- Header section end -->
 
 	<!-- Page info -->

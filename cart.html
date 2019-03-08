@@ -2,6 +2,7 @@
 <html lang="zxx">
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
@@ -22,7 +23,7 @@
 
 	</script>
 
-	<title>Divisima | eCommerce Template</title>
+	<title>Loco</title>
 	<meta charset="UTF-8">
 	<meta name="description" content=" Divisima | eCommerce Template">
 	<meta name="keywords" content="divisima, eCommerce, creative, html">
@@ -50,13 +51,16 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<script>
 
+	<!--check function for each user-->
+
+	<script>
 		function shopkeeper() {
 			$("#shop_button").css('visibility', 'visible')
 					.click( function () {
 						window.location.replace("shopkeeper.html") ;
 					})
+			// this activates the shopkeeper button and redirects to his page
 		}
 
 		function customer() {
@@ -77,14 +81,11 @@
 			auth.onAuthStateChanged(function (user){
 				if(user) {
 					const id = user.uid;
-
-					localStorage.setItem("current_user", id);
-
 					var role = localStorage.getItem("role");
 					if (role == "Shopkeeper") {
 						db.collection("stores").doc(id).get().then(function (doc) {
 							if ((doc.data().role) == "Shopkeeper") {
-								shopkeeper();
+								shopkeeper();  <!--checking role of user-->
 							}
 						});
 					}
@@ -114,10 +115,12 @@
 					});
 				}
 				else{
+					//window.location.replace("SignUp.html");
 					console.log("no user") ;
 				}
 			});
 		}
+
 	</script>
 
 	<script>

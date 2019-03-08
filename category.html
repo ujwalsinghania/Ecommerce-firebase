@@ -29,13 +29,81 @@
 	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
+	<script>
+		function shopkeeper() {
+			$("#shop_button").css('visibility', 'visible')
+					.click( function () {
+						window.location.replace("shopkeeper.html") ;
+					})
+			// this activates the shopkeeper button and redirects to his page
+		}
+
+		function customer() {
+			$("#cust_button").css('visibility', 'visible')
+					.click(function () {
+						window.location.replace("customer.html") ;
+					})
+		}
+
+		function delivery(){
+			$("#delivery_button").css('visibility', 'visible')
+					.click(function () {
+						window.location.replace("delivery.html") ;
+					})
+		}
+
+		function check(){
+			auth.onAuthStateChanged(function (user){
+				if(user) {
+					const id = user.uid;
+					var role = localStorage.getItem("role");
+					if (role == "Shopkeeper") {
+						db.collection("stores").doc(id).get().then(function (doc) {
+							if ((doc.data().role) == "Shopkeeper") {
+								shopkeeper();  <!--checking role of user-->
+							}
+						});
+					}
+					if (role == "Delivery") {
+						db.collection("Delivery").doc(id).get().then(function (doc) {
+							if ((doc.data().role) == "Delivery") {
+								delivery();
+							}
+						});
+					}
+					if (role == "Customer") {
+						db.collection("Customer").doc(id).get().then(function (doc) {
+							if ((doc.data().role) == "Customer") {
+								customer();
+							}
+						});
+					}
+
+
+					$("#login").css('visibility', 'hidden');
+					$("#logout").css('visibility', 'visible').click(function () {
+						auth.signOut().then(function () {
+							// Sign-out successful.
+						}).catch(function (error) {
+							alert(error);
+						});
+					});
+				}
+				else{
+					//window.location.replace("SignUp.html");
+					console.log("no user") ;
+				}
+			});
+		}
+
+	</script>
+
 </head>
 <body>
 	<!-- Page Preloder -->
 	<div id="preloder">
 		<div class="loader"></div>
 	</div>
-
 	<!-- Header section -->
 	<header class="header-section">
 		<div class="header-top">
@@ -44,27 +112,31 @@
 					<div class="col-lg-2 text-center text-lg-left">
 						<!-- logo -->
 						<a href="./index.html" class="site-logo">
-							<img src="img/logo.png" alt="">
+							<h3 style="padding-top: 10px">LOCO</h3>
 						</a>
 					</div>
-					<div class="col-xl-6 col-lg-5">
+					<div class="col-xl-5 col-lg-4">
 						<form class="header-search-form">
 							<input type="text" placeholder="Search on divisima ....">
 							<button><i class="flaticon-search"></i></button>
 						</form>
 					</div>
-					<div class="col-xl-4 col-lg-5">
+					<div class="col-xl-5 col-lg-6">
 						<div class="user-panel">
 							<div class="up-item">
 								<i class="flaticon-profile"></i>
-								<a href="#">Sign</a> In or <a href="#">Create Account</a>
+								<a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
 							</div>
 							<div class="up-item">
 								<div class="shopping-card">
 									<i class="flaticon-bag"></i>
-									<span>0</span>
 								</div>
 								<a href="#">Shopping Cart</a>
+							</div>
+							<div class="up-item">
+								<a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+								<a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
+								<a href="delivery.html" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
 							</div>
 						</div>
 					</div>
@@ -76,22 +148,11 @@
 				<!-- menu -->
 				<ul class="main-menu">
 					<li><a href="#">Home</a></li>
-					<li><a href="#">Women</a></li>
-					<li><a href="#">Men</a></li>
-					<li><a href="#">Jewelry
-					<li><a href="#">Jewelry
-						<span class="new">New</span>
-					</a></li>
+					<li><a href="women.html">Women</a></li>
+					<li><a href="men.html">Men</a></li>
 					<li><a href="shoes.html">Shoes</a>
-						<ul class="sub-menu">
-							<li><a href="#">Sneakers</a></li>
-							<li><a href="#">Sandals</a></li>
-							<li><a href="#">Formal Shoes</a></li>
-							<li><a href="#">Boots</a></li>
-							<li><a href="#">Flip Flops</a></li>
-						</ul>
 					</li>
-					<li><a href="#">Pages</a>
+					<!--<li><a href="#">Pages</a>
 						<ul class="sub-menu">
 							<li><a href="./product.html">Product Page</a></li>
 							<li><a href="./category.html">Category Page</a></li>
@@ -100,7 +161,7 @@
 							<li><a href="./contact.html">Contact Page</a></li>
 						</ul>
 					</li>
-					<li><a href="#">Blog</a></li>
+					<li><a href="#">Blog</a></li> -->
 				</ul>
 			</div>
 		</nav>
