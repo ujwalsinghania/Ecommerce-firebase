@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
@@ -22,7 +22,7 @@
 
     </script>
 
-    <title>Divisima | eCommerce Template</title>
+    <title>Loco | eCommerce Template</title>
     <meta charset="UTF-8">
     <meta name="description" content=" Divisima | eCommerce Template">
     <meta name="keywords" content="divisima, eCommerce, creative, html">
@@ -105,6 +105,7 @@
 
 
                     $("#login").css('visibility', 'hidden');
+                    $("#create").css('visibility', 'hidden') ;
                     $("#logout").css('visibility', 'visible').click(function () {
                         auth.signOut().then(function () {
                             // Sign-out successful.
@@ -150,7 +151,7 @@
     </script>
 
 </head>
-<body>
+<body onload="check()">
 
 <!-- Header section -->
 <header class="header-section">
@@ -173,16 +174,16 @@
                     <div class="user-panel">
                         <div class="up-item">
                             <i class="flaticon-profile"></i>
-                            <a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html">Create Account</a>
+                            <a href="Login.html" id="login">Sign In </a><a href="index.html" id="logout" style="visibility: hidden">Sign Out </a>or <a href="SignUp.html" id="create">Create Account</a>
                         </div>
                         <div class="up-item">
                             <i class="flaticon-bag"></i>
                             <a href="cart.html">Shopping Cart</a>
                         </div>
                         <div class="up-item">
-                            <a href="#" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
+                            <a href="customer.html" id="cust_button" style="visibility: hidden">&ensp; Profile </a>
                             <a href="shopkeeper.html" id="shop_button" style="visibility: hidden">Shopkeeper</a>
-                            <a href="#" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
+                            <a href="delivery.html" id="delivery_button" style="visibility: hidden">&ensp; delivery</a>
                         </div>
                     </div>
                 </div>
@@ -205,7 +206,7 @@
                         <li><a href="#">Flip Flops</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Pages</a>
+                <!--<li><a href="#">Pages</a>
                     <ul class="sub-menu">
                         <li><a href="./product.html">Product Page</a></li>
                         <li><a href="./category.html">Category Page</a></li>
@@ -214,7 +215,7 @@
                         <li><a href="./contact.html">Contact Page</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Blog</a></li>
+                <li><a href="#">Blog</a></li> -->
             </ul>
         </div>
     </nav>

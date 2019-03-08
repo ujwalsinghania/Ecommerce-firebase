@@ -211,15 +211,20 @@
                    })
                }).then(function () {
                    console.log(allItems) ;
-               var template= "<h2>"+ allItems[0].CustomerName+"</h2>";
-               for(var j=0;j<allItems.length;j++) {
-                   template = template +
-                       '<h2> Customer Name: '+ allItems[j].CustomerName+'</h2>'+
-                       '<h4>Customer Address: '+ allItems[j].address +'</h4>' ;
-                   for(var k=0;k<allItems[j].products.length;k++){
-                       template = template + '<h4>'+allItems[j].products[k]+'</h4>' ;
-                   }
-               }
+
+                   var template= '<table class="table"><thead><tr><th>Customer Name</th><th>Address</th><th>Item</th><th>Delivery</th></tr><tbody>';
+                    for(var j=0;j<allItems.length;j++) {
+                       template = template +
+                           '<tr><td>'+ allItems[j].CustomerName+'</td>'+ '<td>'+allItems[j].address +'</td>' ;
+
+                       for(var k=0;k<allItems[j].products.length;k++){
+                        template = template + '<td>'+allItems[j].products[k]+'</td>' ;
+                    }
+                        template = template + '<td><button class="btn btn-success" onclick="">Delivered?</button></td></tr>'
+
+                    }
+                var end = template + '</tbody></table>' ;
+
                document.getElementById("items").innerHTML= template ;
            }).catch(function (error) {
                 console.log(error) ;
