@@ -1,4 +1,4 @@
-# WearJs
+# FireCommerce
 
 This e-commerce site is made enirely using javascript and bootstrap. The data is stored and retrived from firebase. 
 The shopkeeper has a table of items which he can edit and delete from the table which is created dynamically by fetching his data from firebase.
